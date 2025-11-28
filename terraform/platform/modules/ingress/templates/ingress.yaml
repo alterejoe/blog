@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${name}
+  namespace: ${namespace}
+  annotations:
+    cert-manager.io/cluster-issuer: "${cluster_issuer}"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+spec:
+  ingressClassName: ${ingress_class_name}
+  tls:
+    - hosts:
+        - ${host}
+      secretName: ${tls_secret_name}
+  rules:
+    - host: ${host}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${service_name}
+                port:
+                  number: ${service_port}

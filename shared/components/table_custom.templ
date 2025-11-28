@@ -1,0 +1,30 @@
+package components
+
+import "zotes/shared/interfaces"
+
+//templ CustomTable(p interfaces.CustomTableInterface) {
+templ RenderTable[T interfaces.CustomTableConstraint[T]](p T) {
+	<div id="table-layout" class="relative flex flex-col min-h-0 flex-1" name={ p.Common.Name }>
+		<div id="table-rows" class="relative flex flex-col min-h-0 flex-1 overflow-y-scroll">
+			if p.Header() != nil {
+				@p.Header()
+			}
+			if len(p.Data()) == 0  && p.Empty() != nil {
+				@p.Empty()
+			} else {
+				for _, row := range p.Data() {
+					@p.Row(row)
+				}
+			}
+			if p.Footer() != nil {
+				@p.Footer()
+			}
+			if p.RowOverlay() != nil {
+				@p.RowOverlay()
+			}
+		</div>
+		if p.Overlay() != nil {
+			@p.Overlay()
+		}
+	</div>
+}

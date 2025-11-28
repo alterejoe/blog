@@ -1,0 +1,42 @@
+package components
+
+import "zotes/shared/structs"
+import "zotes/shared/theme/classes"
+
+templ Button(p structs.Button) {
+	<button
+		id={ p.ID }
+		name={ p.Name }
+		class={ classes.Button(
+				p.Color,
+				p.Size,
+				p.Radius,
+				p.Border,
+				p.Variant,
+				p.Shadow,
+			) + " disabled:opacity-50 disabled:cursor-not-allowed" }
+		if p.Method == structs.GET {
+			hx-get={ p.URL }
+		}
+		if p.Method == structs.POST {
+			hx-post={ p.URL }
+		}
+		if p.Method == structs.PUT {
+			hx-put={ p.URL }
+		}
+		if p.Method == structs.DELETE {
+			hx-delete={ p.URL }
+		}
+		hx-trigger={ p.Trigger }
+		hx-target={ p.Target }
+		hx-swap={ p.Swap }
+		hx-include={ p.Include }
+		hx-vals={ p.Vals }
+		hx-indicator={ p.Indicator }
+		if p.Disabled {
+			disabled
+		}
+	>
+		{ p.Value }
+	</button>
+}

@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@plugin "@iconify/tailwind4";
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hidden {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+}
+
+@layer base {
+  h1 {
+    @apply text-4xl font-bold;
+  }
+  h2 {
+    @apply text-3xl;
+  }
+  h3 {
+    @apply text-2xl;
+  }
+  h4 {
+    @apply text-xl;
+  }
+  h5 {
+    @apply text-lg;
+  }
+  h6 {
+    @apply text-base;
+  }
+}
+
+@theme {
+  --color-primary: #809bce;
+  --color-secondary: #95b8d1;
+  --color-tertiary: #b8e0d2;
+  --color-accent: #eac4d5;
+  --color-background: #ffffff;
+  /* --color-info: #d6eadf; */
+  --color-attention: #fde68a; /*bg-amber-200*/
+  --color-unique: #d8b4fe; /*bg-purple*/
+  --color-neutral: #cbd5e1;
+}

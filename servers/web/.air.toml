@@ -1,0 +1,64 @@
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "tmp"
+
+[build]
+  # build output
+  bin = "./tmp/main"
+  cmd = "go build -o ./tmp/main ./cmd/"
+  kill_delay = "400ms"
+
+  # reduce rebuild latency without causing flapping
+  delay = 300
+
+  # Air watches EVERYTHING in include_ext and rebuilds on ANY change
+  # So choose VERY carefully:
+  include_ext = ["go", "templ", "html", "css", "js"] 
+  # html/css because templ injects html and tailwind needs css sources
+  # NOTE: I removed “js” because your JS almost never requires rebuild.
+
+  # remove rebuild triggers from huge/unneeded dirs
+  exclude_dir = [
+    "assets",
+    "tmp",
+    "vendor",
+    "testdata",
+    "node_modules",
+    "internal/sqlc/_old",
+    "internal/sqlc/_notyet",
+    "ui/_old_js"
+  ]
+
+  exclude_file = ["./ui/static/css/output.css"]
+
+  # exclude tests and templ-generated Go
+  exclude_regex = ["_test.go", "_templ.go"]
+
+
+  # PRE-COMMANDS — run before *every* rebuild
+  pre_cmd = [
+    # kill old server
+    "sh -c 'lsof -tiTCP:3210 -sTCP:LISTEN | xargs -r kill -9 || true'",
+
+    # shared templ components
+    "cd ../../shared/components && templ generate",
+
+    # local templ
+    "templ generate",
+
+    # tailwind build
+    "tailwindcss -i ./ui/static/globals.css -o ./ui/static/css/output.css --no-color"
+  ]
+
+  post_cmd = []
+
+
+[color]
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[misc]
+  clean_on_exit = true
+

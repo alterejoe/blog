@@ -1,0 +1,10 @@
+# tailwind-sorter.toml
+
+[tool.tailwind_sorter]
+# Override the default file patterns to search.
+# This is useful for projects with different file extensions.
+file_patterns = [".templ", ".js", ".html"]
+
+# Override the default attributes to search for class strings.
+# This is useful for frameworks like Alpine.js or Aether or Templ.
+class_attributes = [ "class"]

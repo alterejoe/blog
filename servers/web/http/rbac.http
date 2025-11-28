@@ -1,0 +1,23 @@
+### 
+
+@local = localhost
+@localhost = http://{{local}}:{{port}}
+@port = 3210
+
+
+### HomeAdmin
+
+GET {{localhost}} HTTP/1.1
+Cookie: {{jmeyer_clerk}}
+
+
+### HomeHarp
+
+GET {{localhost}} HTTP/1.1
+Cookie: {{jmeyer_clerk}}
+
+
+### HomeClerk
+
+GET {{localhost}} HTTP/1.1
+Cookie: {{jmeyer_harp}}

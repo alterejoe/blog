@@ -1,0 +1,150 @@
+package components
+
+import (
+	"zotes/shared/interfaces"
+	"fmt"
+)
+
+// the id="table-layout" is required for javascript to
+// find each table for nice checkbox shift behavior
+templ TableLayout(p interfaces.TableProps) {
+	<div id="table-layout" class="flex flex-row flex-2 ">
+		<div class="flex flex-col flex-2 min-h-0">
+			@Table(p)
+		</div>
+	</div>
+}
+
+templ TableWButtonsLayout(p interfaces.TableWButtonsProps) {
+	<div id="table-layout" class="flex flex-row flex-1 ">
+		<div class="flex flex-col flex-2 min-h-0">
+			@TableWButtons(p)
+		</div>
+	</div>
+}
+
+templ Table(p interfaces.TableProps) {
+	<div id="table" name="table" class="flex flex-col flex-1 min-h-0 max-h-screen overflow-hidden">
+		<div class="flex flex-row flex-1 min-h-0 overflow-hidden">
+			<div class="flex flex-col flex-1 min-h-0 overflow-y-auto">
+				@TableHeader(p)
+				@TableRows(p)
+			</div>
+			<div id="side-bar" hx-get=""></div>
+		</div>
+	</div>
+	<script>
+		function deleteRowById(id) {
+			const row = document.getElementById(id);
+			if (row) row.remove();
+		}
+	</script>
+}
+
+templ TableWButtons(p interfaces.TableWButtonsProps) {
+	<div id="table" name="table" class="flex flex-col flex-1 min-h-0 max-h-screen overflow-hidden">
+		@TableButtons(p)
+		<div class="flex flex-row flex-1 min-h-0 overflow-hidden">
+			<div class="flex flex-col flex-1 min-h-0 overflow-y-auto">
+				@TableHeader(p)
+				@TableRows(p)
+			</div>
+			<div id="side-bar" hx-get=""></div>
+		</div>
+	</div>
+	<script>
+		function deleteRowById(id) {
+			const row = document.getElementById(id);
+			if (row) row.remove();
+		}
+	</script>
+}
+
+templ TableHeader(props interfaces.TableProps) {
+	<div class="flex flex-row  bg-secondary border-b p-2 text-xl">
+		for _, column := range props.Headers(false) {
+			<div class="flex-1 ">{ column.Name() }</div>
+		}
+	</div>
+}
+
+// 	<div
+// 		id="table-rows"
+// 		name="table-rows"
+// 		class="flex flex-col flex-1 min-h-0 overflow-y-auto cursor-pointer"
+// 	>
+templ TableRows(p interfaces.TableProps) {
+	<div
+		id={ p.ID() }
+		name={ p.Name() }
+		class="flex flex-col flex-1 min-h-0 overflow-y-auto cursor-pointer"
+	>
+		for _, row := range p.Rows() {
+			@TableRow(row, p.Checkboxes())
+		}
+	</div>
+}
+
+//id={ fmt.Sprint("row-", p.ID()) }
+//id={ fmt.Sprint("row-", p.ID()) }
+//<input id={ fmt.Sprint("id-", p.ID()) } type="hidden" value={ fmt.Sprint("id-", p.ID()) }/>
+templ TableRow(p interfaces.RowProps, checkboxes bool) {
+	if p.Get() == "" {
+		<div
+			name={ "table-rows" }
+			class="flex flex-row hover:bg-tertiary border-b border-secondary p-2"
+		>
+			for _, order := range p.Order() {
+				if checkboxes {
+					<label for={ fmt.Sprint("checkbox-", p.ID()) } class="flex flex-1 items-center cursor-pointer">
+						<input
+							id={ fmt.Sprint("checkbox-", p.ID()) }
+							name={ p.Name() }
+							type="checkbox"
+							value={ p.ID() }
+							class="cursor-pointer"
+						/>
+						<div class="p-2"></div>
+						<div class="flex-1 select-none">{ p.Values()[order].Value() }</div>
+					</label>
+				} else {
+					<div class="flex-1">{ p.Values()[order].Value() }</div>
+				}
+			}
+		</div>
+	} else {
+		<div
+			name={ "table-row" }
+			class="flex flex-row hover:bg-tertiary border-b p-0.5"
+			hx-get={ p.Get() }
+			hx-swap={ p.HXSwap() }
+			hx-target={ p.HXTarget() }
+			hx-indicator={ p.HXIndicator() }
+			hx-include={ p.HXInclude() }
+			hx-vals={ p.HXVals() }
+		>
+			<input id={ fmt.Sprint("id-", p.ID()) } type="hidden" name="group-id" value={ fmt.Sprint("id-", p.ID()) }/>
+			for _, order := range p.Order() {
+				<div class="flex-1">{ p.Values()[order].Value() }</div>
+			}
+		</div>
+	}
+}
+
+templ TableButtons(props interfaces.TableWButtonsProps) {
+	<div id="table-buttons" class="flex flex-row">
+		for i, button := range props.Buttons() {
+			@TableGetButton(button)
+			if len(props.Buttons()) > i {
+				<div class="p-1"></div>
+			}
+		}
+		for i, template := range props.Templates() {
+			@FileDownloadButton(template)
+			if len(props.Templates()) > i {
+				<div class="p-1"></div>
+			}
+		}
+	</div>
+	<div class="p-1"></div>
+}

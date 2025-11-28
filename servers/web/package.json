@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "@iconify-json/bi": "^1.2.4",
+    "@iconify/tailwind4": "^1.0.6",
+    "prettier": "^3.6.1",
+    "prettier-plugin-tailwindcss": "^0.6.13"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "@tailwindcss/postcss": "^4.1.17",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17"
+  }
+}

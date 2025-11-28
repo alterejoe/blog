@@ -1,0 +1,57 @@
+package theme
+
+// these are the default classes for my theme system. This ensures i don't have to run tailwind everytime
+templ SafeList() {
+	<!-- Colors -->
+	<div
+		class="
+    bg-primary bg-primary-hover peer-checked:bg-primary
+    bg-primary-dark dark:bg-primary-dark dark:peer-checked:bg-primary-dark
+    bg-secondary bg-secondary-hover peer-checked:bg-secondary
+    bg-secondary-dark dark:bg-secondary-dark
+    bg-neutral bg-neutral-hover peer-checked:bg-neutral
+    dark:bg-neutral-dark dark:bg-neutral-dark-hover
+"
+	></div>
+	<!-- Sizes -->
+	<div
+		class="
+    px-1.5 py-1 text-xs
+    px-2 py-1.5 text-sm
+    px-3 py-2 text-base
+    px-4 py-3 text-lg
+    px-5 py-4 text-xl
+"
+	></div>
+	<!-- Radius -->
+	<div class="rounded-none rounded-sm rounded-md rounded-lg rounded-xl rounded-full"></div>
+	<!-- Borders -->
+	<div
+		class="
+    border-0
+    border border-slate-300
+    border-2 border-slate-300
+    border-4 border-slate-300
+    dark:border-neutral-600 dark:border-neutral-700
+"
+	></div>
+	<!-- Shadows -->
+	<div
+		class="
+    shadow-none shadow-sm shadow shadow-lg shadow-xl shadow-inner
+    dark:shadow-none dark:shadow-sm dark:shadow-md dark:shadow-lg dark:shadow-inner
+"
+	></div>
+	<!-- Variants -->
+	<div
+		class="
+    text-white 
+    border border-current bg-transparent 
+    dark:border-neutral-400
+    bg-transparent hover:bg-slate-200
+    dark:hover:bg-neutral-700
+    opacity-70 hover:opacity-100
+    dark:opacity-80 dark:hover:opacity-100
+"
+	></div>
+}

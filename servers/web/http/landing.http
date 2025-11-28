@@ -1,0 +1,17 @@
+### 
+
+@local = localhost
+@localhost = http://{{local}}:{{port}}
+@port = 3210
+
+
+### HOME
+
+GET {{localhost}}/ HTTP/1.1 HTTP/1.1
+Cookie: {{jmeyer_clerk}}
+
+
+### Counties form
+
+GET {{localhost}}/api/verify-email HTTP/1.1 HTTP/1.1
+Cookie: {{jmeyer_clerk}}

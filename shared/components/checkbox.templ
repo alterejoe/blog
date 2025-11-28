@@ -1,0 +1,43 @@
+package components
+
+import (
+	"zotes/shared/theme/classes"
+	"zotes/shared/structs"
+	"zotes/shared/theme"
+)
+
+templ Checkbox(p structs.Checkbox) {
+	<label class="inline-flex items-center cursor-pointer select-none">
+		<input
+			type="checkbox"
+			class="peer sr-only"
+			id={ p.ID }
+			name={ p.Name }
+			value={ p.Value }
+			if p.Checked {
+				checked
+			}
+		/>
+		<!-- spacing between box + label -->
+		<div class="p-2"></div>
+		<div
+			class={ classes.Checkbox(
+            p.Size,
+            p.Size, 
+            p.Radius,
+            p.Border,
+            p.Shadow,
+            ) + " bg-slate-200 flex items-center justify-center peer-checked:[&>svg]:block" + " " + theme.CheckboxColorClass(p.Color) }
+		>
+			<svg
+				class="hidden text-white"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="3"
+				viewBox="0 0 24 24"
+			>
+				<path d="M5 12l5 5L20 7"></path>
+			</svg>
+		</div>
+	</label>
+}

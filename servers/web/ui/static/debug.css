@@ -1,0 +1,12 @@
+* {
+  outline: 1px solid hsl(var(--rand-hue, 0), 100%, 50%);
+}
+
+*::before {
+  content: "";
+  display: none;
+}
+
+* {
+  --rand-hue: calc(var(--seed, 1) * 137 % 360);
+}

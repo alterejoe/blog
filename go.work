@@ -1,0 +1,12 @@
+go 1.24.10
+
+use (
+	./servers/web
+	./shared/components
+	./shared/create
+	./shared/env
+	./shared/interfaces
+	./shared/routes
+	./shared/structs
+	./shared/theme
+)

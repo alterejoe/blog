@@ -1,0 +1,17 @@
+package create
+
+import (
+	"zotes/shared/structs"
+
+	"gopkg.in/gomail.v2"
+)
+
+func CreateMailDialer(auth structs.MailAuth) *gomail.Dialer {
+
+	user := auth.User
+	pass := auth.Password
+	host := auth.Host
+	port := auth.Port
+
+	return gomail.NewDialer(host, port, user, pass)
+}

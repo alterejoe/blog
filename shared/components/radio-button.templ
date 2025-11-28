@@ -1,0 +1,44 @@
+package components
+
+import "zotes/shared/structs"
+import "zotes/shared/theme"
+
+templ RadioButton(p structs.Radio) {
+	<div class="flex items-center">
+		<input
+			type="radio"
+			id={ p.ID }
+			name={ p.Name }
+			value={ p.Value }
+			if p.Checked {
+				checked
+			}
+			if p.Method == structs.GET {
+				hx-get={ p.URL }
+			}
+			if p.Method == structs.POST {
+				hx-post={ p.URL }
+			}
+			if p.Method == structs.PUT {
+				hx-put={ p.URL }
+			}
+			if p.Method == structs.DELETE {
+				hx-delete={ p.URL }
+			}
+			hx-trigger={ p.Trigger }
+			hx-target={ p.Target }
+			hx-swap={ p.Swap }
+			hx-vals={ p.Vals }
+			hx-include={ p.Include }
+			hx-indicator={ p.Indicator }
+			class="peer sr-only absolute"
+		/>
+		<label
+			for={ p.ID }
+			class={ "px-3 py-2 rounded cursor-pointer inline-flex items-center select-none peer-checked:ring-2 peer-checked:ring-slate-600 " +
+                theme.ColorClass(p.Color) }
+		>
+			{ p.Value }
+		</label>
+	</div>
+}
