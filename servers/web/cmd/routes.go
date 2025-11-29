@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"os"
 
-	"zotes/servers/web/internal/app"
-	"zotes/servers/web/internal/handlers/auth"
-	"zotes/servers/web/internal/handlers/index"
+	"blog/servers/web/internal/app"
+	"blog/servers/web/internal/handlers/auth"
+	"blog/servers/web/internal/handlers/index"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

@@ -1,4 +1,4 @@
-module zotes/shared/interfaces
+module blog/shared/interfaces
 
 go 1.24.4
 

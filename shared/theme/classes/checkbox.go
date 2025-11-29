@@ -1,6 +1,6 @@
 package classes
 
-import "zotes/shared/theme"
+import "blog/shared/theme"
 
 func Checkbox(color, size, radius, border, shadow string) string {
 	return theme.CheckboxColorClass(color) + " " +

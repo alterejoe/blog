@@ -2,8 +2,8 @@ package interfaces
 
 import (
 	"context"
-	"zotes/servers/web/db"
-	web "zotes/servers/web/db"
+	"blog/servers/web/db"
+	web "blog/servers/web/db"
 
 	"github.com/jackc/pgx/v5"
 )

@@ -1,7 +1,7 @@
 package create
 
 import (
-	"zotes/shared/structs"
+	"blog/shared/structs"
 
 	"github.com/gomodule/redigo/redis"
 )

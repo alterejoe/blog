@@ -1,7 +1,25 @@
 package html
 
-type SkeletonProps struct{}
+import "blog/servers/web/ui/html/layouts"
+import "blog/servers/web/ui/html/index"
+
+type SkeletonProps struct {
+	Page string
+}
 
 templ Skeleton(props *SkeletonProps) {
-	Skeleton	
+	@layouts.DoctypeStandard() {
+		@GetPage(props.Page)
+	}
+}
+
+func GetPage(page string) templ.Component {
+	switch page {
+	case "index":
+		return index.Index(&index.IndexProps{})
+	case "landing":
+		return Landing(&LandingProps{})
+	default:
+		return index.Index(&index.IndexProps{})
+	}
 }

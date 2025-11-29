@@ -2,7 +2,7 @@ package create
 
 import (
 	"fmt"
-	"zotes/shared/structs"
+	"blog/shared/structs"
 
 	"github.com/casbin/casbin/v2"
 	pgadapter "github.com/pckhoi/casbin-pgx-adapter/v2"

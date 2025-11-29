@@ -2,13 +2,12 @@ package main
 
 import (
 	"flag"
-	"log/slog"
 	"net/http"
 	"os"
 
-	"zotes/servers/web/internal/app"
-	"zotes/shared/create"
-	"zotes/shared/structs"
+	"blog/servers/web/internal/app"
+	"blog/shared/create"
+	"blog/shared/structs"
 
 	"github.com/joho/godotenv"
 )
@@ -20,19 +19,19 @@ func main() {
 	if os.Getenv("ENVIRONMENT") != "prod" {
 		err = godotenv.Load("../../envs/web.env")
 		if err != nil {
-			logger.Error("Error loading .env file", slog.Any("error", err))
+			// logger.Error("Error loading .env file", slog.Any("error", err))
 		}
 		err = godotenv.Load("../../envs/environment.env")
 		if err != nil {
-			logger.Error("Error loading .env file", slog.Any("error", err))
+			// logger.Error("Error loading .env file", slog.Any("error", err))
 		}
 		err = godotenv.Load("../../envs/s3.env")
 		if err != nil {
-			logger.Error("Error loading .env file", slog.Any("error", err))
+			// logger.Error("Error loading .env file", slog.Any("error", err))
 		}
 		err = godotenv.Load("../../envs/pdfworker.env")
 		if err != nil {
-			logger.Error("Error loading .env file", slog.Any("error", err))
+			// logger.Error("Error loading .env file", slog.Any("error", err))
 		}
 	}
 
@@ -56,7 +55,7 @@ func main() {
 	app := &app.App{
 		DB:                pool,
 		Logger:            logger,
-		Session:           create.PGSessionManager(pool, "zotes-client"),
+		Session:           create.PGSessionManager(pool, "blog-client"),
 		OidcAuthenticator: create.OidcAuthenticator("CLIENT_UI"),
 		// JwtIssuer:         create.JwtIssuer(""),
 		// JwtValidator:      create.JwtValidator(""),

@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
-	"zotes/servers/web/internal/app"
+	"blog/servers/web/internal/app"
 )
 
 // TODO: OPS-10

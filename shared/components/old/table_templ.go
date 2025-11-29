@@ -9,8 +9,8 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"blog/shared/interfaces"
 	"fmt"
-	"zotes/shared/interfaces"
 )
 
 // the id="table-layout" is required for javascript to

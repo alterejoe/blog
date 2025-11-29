@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"zotes/servers/web/internal/app"
+	"blog/servers/web/internal/app"
 )
 
 func Logout(app *app.App) http.HandlerFunc {

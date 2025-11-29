@@ -2,7 +2,7 @@ package index
 
 import (
 	"net/http"
-	"zotes/servers/web/internal/app"
+	"blog/servers/web/internal/app"
 )
 
 // func Skeleton(w http.ResponseWriter, r *http.Request, app interfaces.BasicDep) {

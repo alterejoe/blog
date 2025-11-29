@@ -39,9 +39,5 @@
   --color-secondary: #95b8d1;
   --color-tertiary: #b8e0d2;
   --color-accent: #eac4d5;
-  --color-background: #ffffff;
-  /* --color-info: #d6eadf; */
-  --color-attention: #fde68a; /*bg-amber-200*/
-  --color-unique: #d8b4fe; /*bg-purple*/
-  --color-neutral: #cbd5e1;
+  --color-background: #cbd5e1;
 }

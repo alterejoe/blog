@@ -1,4 +1,4 @@
-module zotes/shared/components
+module blog/shared/components
 
 go 1.24.7
 

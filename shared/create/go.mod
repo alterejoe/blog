@@ -1,4 +1,4 @@
-module zotes/shared/create
+module blog/shared/create
 
 go 1.24.7
 

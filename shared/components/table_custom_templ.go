@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "zotes/shared/interfaces"
+import "blog/shared/interfaces"
 
 // templ CustomTable(p interfaces.CustomTableInterface) {
 func RenderTable[T interfaces.CustomTableConstraint[T]](p T) templ.Component {

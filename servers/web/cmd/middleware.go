@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"zotes/servers/web/internal/app"
+	"blog/servers/web/internal/app"
 
 	"github.com/google/uuid"
 )

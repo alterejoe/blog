@@ -1,6 +1,6 @@
 package components
 
-import "zotes/shared/interfaces"
+import "blog/shared/interfaces"
 
 //templ CustomTable(p interfaces.CustomTableInterface) {
 templ RenderTable[T interfaces.CustomTableConstraint[T]](p T) {

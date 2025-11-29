@@ -9,9 +9,9 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"zotes/shared/structs"
-	"zotes/shared/theme"
-	"zotes/shared/theme/classes"
+	"blog/shared/structs"
+	"blog/shared/theme"
+	"blog/shared/theme/classes"
 )
 
 func Checkbox(p structs.Checkbox) templ.Component {

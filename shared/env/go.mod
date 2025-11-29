@@ -1,4 +1,4 @@
-module zotes/shared/env
+module blog/shared/env
 
 go 1.24.7
 

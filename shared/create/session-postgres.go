@@ -3,7 +3,7 @@ package create
 import (
 	"context"
 	"time"
-	"zotes/shared/interfaces"
+	"blog/shared/interfaces"
 
 	"github.com/alexedwards/scs/pgxstore"
 	"github.com/alexedwards/scs/v2"

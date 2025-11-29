@@ -3,5 +3,8 @@ package html
 type LandingProps struct{}
 
 templ Landing(props *LandingProps) {
-	Landing
+	<div class="min-h-0 flex flex-row flex-1">
+		<div class="flex-1 bg-background">Darkmode</div>
+		<div class="flex-1 bg-primary">Lightmode</div>
+	</div>
 }

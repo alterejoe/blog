@@ -8,8 +8,8 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "zotes/shared/structs"
-import "zotes/shared/theme/classes"
+import "blog/shared/structs"
+import "blog/shared/theme/classes"
 
 func Button(p structs.Button) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {

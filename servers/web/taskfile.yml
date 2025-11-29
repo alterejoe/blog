@@ -1,0 +1,44 @@
+version: "3"
+
+tasks:
+  dev:
+    desc: "Run full development environment"
+    run: once
+    deps:
+      - watch:templ-local
+      - watch:templ-shared
+      - watch:tailwind
+      - run:air
+
+  clean:
+    desc: "Clean up all dev processes and ports"
+    cmds:
+      - killall -9 main 2>/dev/null || true
+      - lsof -ti:4444 | xargs kill -9 2>/dev/null || true
+      - echo "Cleaned up processes on port 4444"
+
+  run:air:
+    cmds:
+      - air
+
+  watch:templ-local:
+    sources:
+      - "./**/*.templ"
+    cmds:
+      - templ generate --watch
+
+  watch:templ-shared:
+    dir: ../../shared/components
+    sources:
+      - "./**/*.templ"
+    cmds:
+      - templ generate --watch
+
+  watch:tailwind:
+    cmds:
+      - >
+        tailwindcss
+        -i ./ui/static/globals.css
+        -o ./ui/static/css/output.css
+        --no-color
+        --watch

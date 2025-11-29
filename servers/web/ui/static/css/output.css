@@ -44,7 +44,8 @@
     --color-primary: #809bce;
     --color-secondary: #95b8d1;
     --color-tertiary: #b8e0d2;
-    --color-neutral: #cbd5e1;
+    --color-accent: #eac4d5;
+    --color-background: #cbd5e1;
   }
 }
 @layer base {
@@ -240,6 +241,12 @@
   .h-6 {
     height: calc(var(--spacing) * 6);
   }
+  .h-screen {
+    height: 100vh;
+  }
+  .max-h-full {
+    max-height: 100%;
+  }
   .max-h-screen {
     max-height: 100vh;
   }
@@ -260,6 +267,9 @@
   }
   .flex-2 {
     flex: 2;
+  }
+  .flex-\[7_0_0\] {
+    flex: 7 0 0;
   }
   .animate-spin {
     animation: var(--animate-spin);
@@ -348,8 +358,8 @@
   .border-slate-300 {
     border-color: var(--color-slate-300);
   }
-  .bg-neutral {
-    background-color: var(--color-neutral);
+  .bg-background {
+    background-color: var(--color-background);
   }
   .bg-primary {
     background-color: var(--color-primary);
@@ -496,11 +506,6 @@
   .select-none {
     -webkit-user-select: none;
     user-select: none;
-  }
-  .peer-checked\:bg-neutral {
-    &:is(:where(.peer):checked ~ *) {
-      background-color: var(--color-neutral);
-    }
   }
   .peer-checked\:bg-primary {
     &:is(:where(.peer):checked ~ *) {

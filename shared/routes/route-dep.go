@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"zotes/shared/interfaces"
+	"blog/shared/interfaces"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/jackc/pgx/v5"

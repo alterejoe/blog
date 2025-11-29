@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"zotes/shared/structs"
+	"blog/shared/structs"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )

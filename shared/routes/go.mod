@@ -1,4 +1,4 @@
-module zotes/shared/routes
+module blog/shared/routes
 
 go 1.24.7
 

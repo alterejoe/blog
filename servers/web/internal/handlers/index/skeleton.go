@@ -1,9 +1,9 @@
 package index
 
 import (
+	"blog/servers/web/internal/app"
+	"blog/servers/web/ui/html"
 	"net/http"
-	"zotes/servers/web/internal/app"
-	"zotes/servers/web/ui/html"
 )
 
 func Skeleton(app *app.App) http.HandlerFunc {
@@ -15,7 +15,9 @@ func Skeleton(app *app.App) http.HandlerFunc {
 
 		// page = ValidatePage(page)
 
-		props := &html.SkeletonProps{}
+		props := &html.SkeletonProps{
+			Page: "landing",
+		}
 
 		html.Skeleton(props).Render(r.Context(), w)
 	}

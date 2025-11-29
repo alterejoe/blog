@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"zotes/shared/structs"
+	"blog/shared/structs"
 
 	"github.com/a-h/templ"
 )

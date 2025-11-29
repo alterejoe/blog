@@ -3,8 +3,8 @@ package auth
 import (
 	"net/http"
 
-	"zotes/servers/web/internal/app"
-	"zotes/servers/web/ui/html"
+	"blog/servers/web/internal/app"
+	"blog/servers/web/ui/html"
 )
 
 func Landing(app *app.App) http.HandlerFunc {

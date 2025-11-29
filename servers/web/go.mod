@@ -1,4 +1,4 @@
-module zotes/servers/web
+module blog/servers/web
 
 go 1.24.0
 
@@ -43,4 +43,4 @@ require (
 	golang.org/x/oauth2 v0.31.0 // indirect
 )
 
-replace zotes/database/model => ../database/model
+replace blog/database/model => ../database/model

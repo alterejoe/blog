@@ -1,7 +1,7 @@
 package create
 
 import (
-	"zotes/shared/structs"
+	"blog/shared/structs"
 
 	"gopkg.in/gomail.v2"
 )

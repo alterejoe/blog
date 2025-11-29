@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"zotes/shared/interfaces"
+	"blog/shared/interfaces"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/jackc/pgx/v5/pgxpool"

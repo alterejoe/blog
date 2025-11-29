@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"zotes/servers/web/db"
-	"zotes/servers/web/internal/app"
+	"blog/servers/web/db"
+	"blog/servers/web/internal/app"
 
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/jackc/pgx/v5/pgtype"

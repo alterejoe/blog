@@ -1,0 +1,18 @@
+package index
+
+type IndexProps struct{}
+
+templ Index(props *IndexProps) {
+	<div class="p-3"></div>
+	<div class="flex flex-1 flex-row min-h-0 max-h-full">
+		<div class="flex-1"></div>
+		<div class="flex-col flex-[7_0_0] flex min-h-0 bg-secondary justify-center">
+			<div class="p-3"></div>
+			<div class="flex flex-row px-5">
+				<textarea type="text" class="bg-primary hover:bg-primary-hover flex-1" placeholder="write short stream of conciousness thoughts..."></textarea>
+			</div>
+			<div class="flex-1"></div>
+		</div>
+		<div class="flex-1"></div>
+	</div>
+}
