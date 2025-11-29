@@ -9,6 +9,8 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import "blog/servers/web/ui/html"
+import "blog/servers/web/ui/html/layouts"
+import "fmt"
 
 type IndexProps struct{}
 
@@ -45,13 +47,30 @@ func Index(props *IndexProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex-col flex-1 flex min-h-0 bg-secondary justify-center\"><div class=\"p-3\"></div><div class=\"flex flex-row px-5\"><textarea type=\"text\" class=\"bg-primary hover:bg-primary-hover flex-1\" placeholder=\"write short stream of conciousness thoughts...\"></textarea></div><div class=\"flex-1\"></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
+			for i := 0; i < 10; i++ {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"p-2\"></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				if i%2 == 0 {
+					templ_7745c5c3_Err = layouts.CardClosed(&layouts.CardProps{Id: fmt.Sprintf("card-%d", i), Orientation: "left"}).Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				} else {
+					templ_7745c5c3_Err = layouts.CardClosed(&layouts.CardProps{Id: fmt.Sprintf("card-%d", i), Orientation: "right"}).Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
 			}
 			return nil
 		})
 		templ_7745c5c3_Err = html.SkeletonContainer().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<script>\n\t\tdocument.body.addEventListener(\"htmx:beforeSwap\", function (evt) {\n\t\t\tconsole.log(\"HTMX beforeSwap:\", evt.detail);\n\t\t});\n\t\tdocument.body.addEventListener(\"htmx:afterSwap\", function (evt) {\n\t\t\tconsole.log(\"HTMX afterSwap:\", evt.detail);\n\t\t});\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

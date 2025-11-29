@@ -34,10 +34,19 @@
   }
 }
 
+/* @theme { */
+/*   --color-primary: #6d5a67; */
+/*   --color-secondary: #435863; */
+/*   --color-tertiary: #806e62; */
+/*   --color-accent: #bb776b; */
+/*   --color-neutral: #747a83; */
+/* } */
+
 @theme {
-  --color-primary: #809bce;
-  --color-secondary: #95b8d1;
-  --color-tertiary: #b8e0d2;
-  --color-accent: #eac4d5;
-  --color-background: #cbd5e1;
+  --color-primary: #728e9d;
+  --color-secondary: #a994a3;
+  --color-tertiary: #bcaa9f;
+  --color-accent: #e7bfb7;
+  --color-neutral: #b2b7be;
+  --color-background: #47505e;
 }

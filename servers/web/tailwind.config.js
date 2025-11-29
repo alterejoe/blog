@@ -7,10 +7,10 @@ export default {
         "./ui/**/*.{templ,html,js}",
         "../../shared/components/**/*.{templ,html,js}",
         {
-            files: ["./**/*.go"],
+            files: ["./**/*_classes.go"],
             extract: {
                 go: (content) => {
-                    const regex = /Class:\s*"([^"]+)"/g;
+                    const regex = /"([^"]+)"/g;
                     const matches = [];
                     let match;
                     while ((match = regex.exec(content)) !== null) {
@@ -30,8 +30,9 @@ export default {
                 tertiary: "var(--color-tertiary)",
                 accent: "var(--color-accent)",
                 background: "var(--color-background)",
+                neutral: "var(--color-neutral)",
             },
         },
     },
-    plugins: [require("./tailwind-derived-colors-plugin"), iconifyPlugin()],
+    plugins: [iconifyPlugin()],
 };

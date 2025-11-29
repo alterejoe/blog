@@ -1,17 +1,13 @@
 package htmlindex
 
-import "blog/servers/web/ui/html"
-
 type BlogProps struct{}
 
 templ Blog(props *IndexProps) {
-	@html.SkeletonContainer() {
-		<div class="flex-col flex-1 flex min-h-0 bg-secondary justify-center">
-			<div class="p-3"></div>
-			<div class="flex flex-row px-5">
-				<textarea type="text" class="bg-primary hover:bg-primary-hover flex-1" placeholder="write short stream of conciousness thoughts..."></textarea>
-			</div>
-			<div class="flex-1"></div>
+	<div class="flex-col flex-1 flex min-h-0 bg-secondary justify-center m-3">
+		<div class="p-3"></div>
+		<div class="flex flex-row px-5">
+			<textarea type="text" class="bg-primary drop-shadow-md drop-shadow-background hover:bg-primary-hover flex-1" placeholder="write short stream of conciousness thoughts..."></textarea>
 		</div>
-	}
+		<div class="flex-1"></div>
+	</div>
 }

@@ -1,15 +1,15 @@
-package components
+pkckage components
 
 import "blog/shared/interfaces"
 
-//templ CustomTable(p interfaces.CustomTableInterface) {
-templ RenderTable[T interfaces.CustomTableConstraint[T]](p T) {
-	<div id="table-layout" class="relative flex flex-col min-h-0 flex-1" name={ p.Common.Name }>
+// Option 1: Two type parameters (recommended)
+templ RenderTable[T any, P interfaces.CustomTableConstraint[T]](p P) {
+	<div id="table-layout" class="relative flex flex-col min-h-0 flex-1" name={ p.Common().Name }>
 		<div id="table-rows" class="relative flex flex-col min-h-0 flex-1 overflow-y-scroll">
 			if p.Header() != nil {
 				@p.Header()
 			}
-			if len(p.Data()) == 0  && p.Empty() != nil {
+			if len(p.Data()) == 0 && p.Empty() != nil {
 				@p.Empty()
 			} else {
 				for _, row := range p.Data() {
@@ -28,3 +28,7 @@ templ RenderTable[T interfaces.CustomTableConstraint[T]](p T) {
 		}
 	</div>
 }
+
+
+
+

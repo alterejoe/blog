@@ -48,6 +48,10 @@ func GetRoutes(app *app.App) *chi.Mux {
 		r.Get("/", handlers.Skeleton(app))
 		r.Get("/index", index.Index(app))
 		r.Get("/blog", index.Blog(app))
+		r.Get("/theme", index.Theme(app))
+
+		r.Get("/card", index.Card(app))
+		r.Get("/nav", index.Nav(app))
 		if os.Getenv("ENVIRONMENT") == "dev" {
 			r.Get("/debug", index.Debug(app))
 			r.Get("/debug/empty", index.DebugEmpty(app))

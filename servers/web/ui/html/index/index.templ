@@ -1,17 +1,28 @@
 package htmlindex
 
 import "blog/servers/web/ui/html"
+import "blog/servers/web/ui/html/layouts"
+import "fmt"
 
 type IndexProps struct{}
 
 templ Index(props *IndexProps) {
 	@html.SkeletonContainer() {
-		<div class="flex-col flex-1 flex min-h-0 bg-secondary justify-center">
-			<div class="p-3"></div>
-			<div class="flex flex-row px-5">
-				<textarea type="text" class="bg-primary hover:bg-primary-hover flex-1" placeholder="write short stream of conciousness thoughts..."></textarea>
-			</div>
-			<div class="flex-1"></div>
-		</div>
+		for i := 0; i < 10; i++ {
+			<div class="p-2"></div>
+			if i % 2 == 0 {
+				@layouts.CardClosed(&layouts.CardProps{Id: fmt.Sprintf("card-%d", i), Orientation: "left"})
+			} else {
+				@layouts.CardClosed(&layouts.CardProps{Id: fmt.Sprintf("card-%d", i), Orientation: "right"})
+			}
+		}
 	}
+	<script>
+		document.body.addEventListener("htmx:beforeSwap", function (evt) {
+			console.log("HTMX beforeSwap:", evt.detail);
+		});
+		document.body.addEventListener("htmx:afterSwap", function (evt) {
+			console.log("HTMX afterSwap:", evt.detail);
+		});
+	</script>
 }

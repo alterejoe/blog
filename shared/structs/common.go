@@ -1,7 +1,5 @@
 package structs
 
-import "fmt"
-
 type Common struct {
 	ID    string
 	Name  string
@@ -19,7 +17,7 @@ const (
 )
 
 type Hx struct {
-	Method    Method
+	// Method    Method
 	Target    string
 	Include   string
 	Trigger   string
@@ -31,22 +29,23 @@ type Hx struct {
 	URL     string
 }
 
-func (h Hx) Attr() string {
-
-	switch h.Method {
-	case GET:
-		return fmt.Sprintf("hx-get=%s", h.URL)
-
-	case POST:
-		return fmt.Sprintf("hx-post=%s", h.URL)
-	case PUT:
-		return fmt.Sprintf("hx-put=%s", h.URL)
-	case DELETE:
-		return fmt.Sprintf("hx-delete=%s", h.URL)
-	default:
-		return ""
-	}
-}
+//
+// func (h Hx) Attr() string {
+//
+// 	switch h.Method {
+// 	case GET:
+// 		return fmt.Sprintf("hx-get=%s", h.URL)
+//
+// 	case POST:
+// 		return fmt.Sprintf("hx-post=%s", h.URL)
+// 	case PUT:
+// 		return fmt.Sprintf("hx-put=%s", h.URL)
+// 	case DELETE:
+// 		return fmt.Sprintf("hx-delete=%s", h.URL)
+// 	default:
+// 		return ""
+// 	}
+// }
 
 type Link struct {
 	Href string

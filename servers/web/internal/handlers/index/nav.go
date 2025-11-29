@@ -2,11 +2,11 @@ package index
 
 import (
 	"blog/servers/web/internal/app"
-	htmxindex "blog/servers/web/ui/html/index"
+	layouts "blog/servers/web/ui/html/layouts"
 	"net/http"
 )
 
-func Blog(app *app.App) http.HandlerFunc {
+func Nav(app *app.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 
@@ -15,8 +15,8 @@ func Blog(app *app.App) http.HandlerFunc {
 
 		// page = ValidatePage(page)
 
-		props := &htmxindex.IndexProps{}
+		props := &layouts.NavProps{}
 
-		htmxindex.Blog(props).Render(r.Context(), w)
+		layouts.NavOpen(props).Render(r.Context(), w)
 	}
 }

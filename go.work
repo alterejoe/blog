@@ -8,5 +8,4 @@ use (
 	./shared/interfaces
 	./shared/routes
 	./shared/structs
-	./shared/theme
 )

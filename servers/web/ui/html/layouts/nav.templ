@@ -1,0 +1,84 @@
+package layouts
+
+import "blog/shared/structs"
+
+import "blog/servers/web/ui/html/classes"
+
+type NavProps struct {
+}
+
+// 		class="w-full mt-10 absolute left-0 z-50 flex flex-row
+//                 transition-transform duration-300 ease-in-out -translate-x-full"
+templ NavClosed(nav *NavProps) {
+	<div class="w-full relative h-12">
+		<div
+			id="nav"
+			class={ classes.SlideLeftClosed }
+			hx-get="/nav"
+			hx-trigger="load"
+			hx-swap="outerHTML swap:200ms settle:200ms"
+			hx-target="#nav"
+		>
+			@Nav(nav)
+		</div>
+	</div>
+}
+
+// 		class="w-full mt-10 absolute left-0 z-50 flex flex-row
+//                 transition-transform duration-300 ease-in-out translate-x-0"
+templ NavOpen(nav *NavProps) {
+	<div
+		id="nav"
+		class={ classes.SlideLeftOpen }
+	>
+		@Nav(nav)
+	</div>
+}
+
+templ Nav(nav *NavProps) {
+	<div class="bg-primary flex flex-row flex-[2_0_0] drop-shadow-background drop-shadow-md">
+		<div class="flex-1"></div>
+		<div class="flex-1 flex flex-row">
+			@Button(structs.Button{
+				Common: structs.Common{
+					Name:  "page",
+					Value: "Home",
+				},
+				Hx: structs.Hx{
+					URL: "/index",
+				},
+			})
+			@Button(structs.Button{
+				Common: structs.Common{
+					Name:  "page",
+					Value: "Blog",
+				},
+				Hx: structs.Hx{
+					URL: "/blog",
+				},
+			})
+			@Button(structs.Button{
+				Common: structs.Common{
+					Name:  "page",
+					Value: "Theme",
+				},
+				Hx: structs.Hx{
+					URL: "/theme",
+				},
+			})
+		</div>
+	</div>
+	<div class="flex-[7_0_0]"></div>
+}
+
+templ Button(props structs.Button) {
+	<button
+		class="px-2 py-1 cursor-pointer hover:bg-tertiary-hover"
+		name={ props.Common.Name }
+		value={ props.Common.Value }
+		hx-get={ props.Hx.URL }
+		hx-target="#skeleton"
+		hx-swap="innerHTML"
+		hx-trigger="click"
+	>{ props.Common.Value }</button>
+}

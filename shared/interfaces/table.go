@@ -16,8 +16,8 @@ type CustomTable interface {
 }
 
 type CustomTableConstraint[T any] interface {
-	structs.Common
 	CustomTable
 	Row(T) templ.Component
 	Data() []T
+	Common() structs.Common
 }

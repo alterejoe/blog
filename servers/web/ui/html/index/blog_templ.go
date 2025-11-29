@@ -8,8 +8,6 @@ package htmlindex
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "blog/servers/web/ui/html"
-
 type BlogProps struct{}
 
 func Blog(props *IndexProps) templ.Component {
@@ -33,25 +31,7 @@ func Blog(props *IndexProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-			if !templ_7745c5c3_IsBuffer {
-				defer func() {
-					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err == nil {
-						templ_7745c5c3_Err = templ_7745c5c3_BufErr
-					}
-				}()
-			}
-			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex-col flex-1 flex min-h-0 bg-secondary justify-center\"><div class=\"p-3\"></div><div class=\"flex flex-row px-5\"><textarea type=\"text\" class=\"bg-primary hover:bg-primary-hover flex-1\" placeholder=\"write short stream of conciousness thoughts...\"></textarea></div><div class=\"flex-1\"></div></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			return nil
-		})
-		templ_7745c5c3_Err = html.SkeletonContainer().Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex-col flex-1 flex min-h-0 bg-secondary justify-center m-3\"><div class=\"p-3\"></div><div class=\"flex flex-row px-5\"><textarea type=\"text\" class=\"bg-primary drop-shadow-md drop-shadow-background hover:bg-primary-hover flex-1\" placeholder=\"write short stream of conciousness thoughts...\"></textarea></div><div class=\"flex-1\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
