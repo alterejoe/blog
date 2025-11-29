@@ -31,7 +31,7 @@ func Landing(props *LandingProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-0 flex flex-row flex-1\"><div class=\"flex-1 bg-background\">Darkmode</div><div class=\"flex-1 bg-primary\">Lightmode</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-row flex-1 min-h-0\"><div id=\"box\" class=\"flex-start bg-green-500 w-5 h-5\"></div></div><script src=\"/static/js/landing.js\" defer></script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

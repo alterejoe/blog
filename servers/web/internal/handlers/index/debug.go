@@ -1,8 +1,8 @@
 package index
 
 import (
-	"net/http"
 	"blog/servers/web/internal/app"
+	"net/http"
 )
 
 // func Skeleton(w http.ResponseWriter, r *http.Request, app interfaces.BasicDep) {

@@ -1,4 +1,4 @@
-package index
+package handlers
 
 import (
 	"blog/servers/web/internal/app"
@@ -16,7 +16,8 @@ func Skeleton(app *app.App) http.HandlerFunc {
 		// page = ValidatePage(page)
 
 		props := &html.SkeletonProps{
-			Page: "landing",
+			// Page: "landing",
+			Page: "index",
 		}
 
 		html.Skeleton(props).Render(r.Context(), w)

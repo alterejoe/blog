@@ -1,7 +1,6 @@
 package html
 
 import "blog/servers/web/ui/html/layouts"
-import "blog/servers/web/ui/html/index"
 
 type SkeletonProps struct {
 	Page string
@@ -9,17 +8,47 @@ type SkeletonProps struct {
 
 templ Skeleton(props *SkeletonProps) {
 	@layouts.DoctypeStandard() {
-		@GetPage(props.Page)
+		<div class="p-3"></div>
+		<div class="flex flex-1 flex-row min-h-0 max-h-full">
+			<div class="flex-1"></div>
+			@SkeletonContainer() {
+				@GetPage(props.Page)
+			}
+			<div class="flex-1"></div>
+		</div>
 	}
 }
 
-func GetPage(page string) templ.Component {
+templ SkeletonContainer() {
+	<style>
+		#skeleton.htmx-swapping {
+			opacity: 0;
+		}
+	</style>
+	<div
+		id="skeleton"
+		class="flex-[7_0_0] flex flex-col min-h-0 transition-opacity duration-200 ease-in opacity-200"
+	>
+		{ children... }
+	</div>
+}
+
+func PageToRoute(page string) string {
 	switch page {
-	case "index":
-		return index.Index(&index.IndexProps{})
 	case "landing":
-		return Landing(&LandingProps{})
+		return "/landing"
+	case "index":
+		return "/index"
 	default:
-		return index.Index(&index.IndexProps{})
+		return "/index"
 	}
+}
+
+templ GetPage(page string) {
+	<div
+		hx-get={ PageToRoute(page) }
+		hx-trigger="load"
+		hx-swap="outerHTML swap:200ms settle:200ms"
+		hx-target="#skeleton"
+	></div>
 }
