@@ -1,0 +1,65 @@
+package layouts
+
+import "github.com/alterejoe/blog/ui/html/classes"
+import "fmt"
+
+type CardProps struct {
+	Id          string
+	Orientation string
+}
+
+templ CardClosed(card *CardProps) {
+	<div class="w-full relative h-32">
+		if card.Orientation == "left" {
+			<div
+				id={ card.Id }
+				class={ classes.SlideLeftClosed }
+				hx-get={ fmt.Sprintf("/card?orientation=%s&id=%s", card.Orientation, card.Id) }
+				hx-trigger="load"
+				hx-swap="outerHTML swap:200ms settle:200ms"
+				hx-target={ fmt.Sprintf("#%s", card.Id) }
+			>
+				@Card(card)
+			</div>
+		} else {
+			<div
+				id={ card.Id }
+				class={ classes.SlideRightClosed }
+				hx-get={ fmt.Sprintf("/card?orientation=%s&id=%s", card.Orientation, card.Id) }
+				hx-trigger="load"
+				hx-swap="outerHTML swap:200ms settle:200ms"
+				hx-target={ fmt.Sprintf("#%s", card.Id) }
+			>
+				@Card(card)
+			</div>
+		}
+	</div>
+}
+
+templ CardOpen(card *CardProps) {
+	if card.Orientation == "left" {
+		<div
+			id={ card.Id }
+			class={ classes.SlideLeftOpen }
+		>
+			@Card(card)
+		</div>
+	} else {
+		<div
+			id={ card.Id }
+			class={ classes.SlideRightOpen }
+		>
+			@Card(card)
+		</div>
+	}
+}
+
+templ Card(card *CardProps) {
+	if card.Orientation == "left" {
+		<div class="flex-1 bg-tertiary p-10 drop-shadow-lg drop-shadow-background">This is a card</div>
+		<div class="flex-1"></div>
+	} else {
+		<div class="flex-1"></div>
+		<div class="flex-1 bg-tertiary p-10 drop-shadow-lg drop-shadow-background">This is a card</div>
+	}
+}

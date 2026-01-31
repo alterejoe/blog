@@ -1,0 +1,31 @@
+package html
+
+import "github.com/alterejoe/blog/ui/html/layouts"
+
+type SkeletonProps struct {
+	Page string
+}
+
+templ FullPage(content templ.Component) {
+	@layouts.DoctypeStandard() {
+		<div class="p-1"></div>
+		@layouts.NavClosed(&layouts.NavProps{})
+		<div class="flex flex-1 flex-row min-h-0 max-h-full">
+			@SkeletonContainer(content)
+		</div>
+	}
+}
+
+templ SkeletonContainer(content templ.Component) {
+	<div
+		id="skeleton"
+		class="flex-1 flex flex-col min-h-0 transition-opacity duration-200 ease-in opacity-200"
+	>
+		@content
+		<style>
+			#skeleton.htmx-swapping {
+				opacity: 0;
+			}
+		</style>
+	</div>
+}
