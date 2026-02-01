@@ -1,12 +1,25 @@
 package htmlindex
 
+import "github.com/alterejoe/shared/components"
+import "github.com/alterejoe/shared/structs"
+
 type BlogProps struct{}
 
 templ Blog(props *IndexProps) {
 	<div class="flex-col flex-1 flex min-h-0 bg-secondary justify-center m-3">
 		<div class="p-3"></div>
 		<div class="flex flex-row px-5">
-			<textarea type="text" class="bg-primary drop-shadow-md drop-shadow-background hover:bg-primary-hover flex-1" placeholder="write short stream of conciousness thoughts..."></textarea>
+			@components.PrimaryTextarea(&structs.Textarea{
+				Common: structs.Common{
+					ID:       "status-bar",
+					Name:     "status-bar",
+					Disabled: false,
+				},
+				Placeholder: "This is a blog",
+				Rows:        0,
+				Autofocus:   false,
+				Required:    false,
+			})
 		</div>
 		<div class="flex-1"></div>
 	</div>

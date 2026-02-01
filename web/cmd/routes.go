@@ -48,14 +48,19 @@ func GetRoutes(app *app.App) *chi.Mux {
 		r.Get("/", http.RedirectHandler("/index", http.StatusSeeOther).ServeHTTP)
 		r.Get("/index", index.Index(app))
 		r.Get("/blog", index.Blog(app))
+		r.Get("/notes", index.Notes(app))
 		r.Get("/theme", index.Theme(app))
 
-		r.Get("/card", index.Card(app))
 		r.Get("/nav", index.Nav(app))
 		if os.Getenv("ENVIRONMENT") == "dev" {
 			r.Get("/debug", index.Debug(app))
 			r.Get("/debug/empty", index.DebugEmpty(app))
 		}
+	})
+	r.Group(func(r chi.Router) {
+		r.Route("/admin", func(r chi.Router) {
+			r.Get("/", index.Blog(app))
+		})
 	})
 
 	return r

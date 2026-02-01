@@ -16,9 +16,9 @@ replace github.com/alterejoe/shared/envs => ../../shared/envs
 
 require (
 	github.com/a-h/templ v0.3.977
+	github.com/alterejoe/shared/components v0.0.0-00010101000000-000000000000
 	github.com/alterejoe/shared/create v0.0.0-00010101000000-000000000000
-	github.com/alterejoe/shared/interfaces v0.0.0-00010101000000-000000000000
-	github.com/alterejoe/shared/structs v0.0.0-20260105030754-0f48f6f7e840
+	github.com/alterejoe/shared/structs v0.0.0-20260131031456-308870a41570
 	github.com/casbin/casbin/v2 v2.135.0
 	github.com/coreos/go-oidc/v3 v3.17.0
 	github.com/go-chi/chi/v5 v5.2.4

@@ -9,17 +9,17 @@ import (
 	htmxindex "github.com/alterejoe/blog/ui/html/index"
 )
 
-func Index(app *app.App) http.HandlerFunc {
+func Notes(app *app.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 
-		// page := r.URL.Query().Get("page")
-		_, _ = app.Session.GetFlashMessage(r.Context())
+		props := htmxindex.NotesProps{
+			Fleeting:        &htmxindex.FleetingProps{},
+			FolderStructure: &htmxindex.FolderStructureProps{},
+		}
 
-		props := &htmxindex.IndexProps{}
-
-		// content := htmxindex.Index(props)
+		// content := htmxindex.Blog(props)
 		// htmxhtml.FullPage(content).Render(r.Context(), w)
-		helpers.RenderContent(w, r, htmxindex.Index(props), htmxhtml.FullPage)
+		helpers.RenderContent(w, r, htmxindex.Notes(props), htmxhtml.FullPage)
 	}
 }

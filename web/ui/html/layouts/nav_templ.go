@@ -9,11 +9,20 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/alterejoe/shared/structs"
-
-import "github.com/alterejoe/blog/ui/html/classes"
+import "github.com/alterejoe/shared/components"
 
 type NavProps struct {
 }
+
+const (
+	SlideLeft       = " w-full absolute left-0 z-50 transition-transform duration-500 ease-in-out flex flex-row"
+	SlideLeftClosed = SlideLeft + " -translate-x-full"
+	SlideLeftOpen   = SlideLeft + " translate-x-0"
+
+	SlideRight       = " w-full absolute right-0 z-50 transition-transform duration-500 ease-in-out flex flex-row"
+	SlideRightClosed = SlideRight + " translate-x-full"
+	SlideRightOpen   = SlideRight + " translate-x-0"
+)
 
 //			class="w-full mt-10 absolute left-0 z-50 flex flex-row
 //	                transition-transform duration-300 ease-in-out -translate-x-full"
@@ -42,7 +51,7 @@ func NavClosed(nav *NavProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 = []any{classes.SlideLeftClosed}
+		var templ_7745c5c3_Var2 = []any{SlideLeftClosed}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -60,7 +69,7 @@ func NavClosed(nav *NavProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-get=\"/nav\" hx-trigger=\"load\" hx-swap=\"outerHTML swap:200ms settle:200ms\" hx-target=\"#nav\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-get=\"/nav\" hx-trigger=\"load\" hx-swap=\"outerHTML swap:100ms settle:30ms\" hx-target=\"#nav\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -99,7 +108,7 @@ func NavOpen(nav *NavProps) templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var5 = []any{classes.SlideLeftOpen}
+		var templ_7745c5c3_Var5 = []any{SlideLeftOpen}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -133,6 +142,22 @@ func NavOpen(nav *NavProps) templ.Component {
 	})
 }
 
+func NavButton(path, name string) *structs.Button {
+	return &structs.Button{
+		Common: structs.Common{
+			Name:  "page",
+			Value: name,
+		},
+		Hx: structs.Hx{
+			URL:     path,
+			PushURL: path,
+			Target:  "#skeleton",
+			Trigger: "click",
+			Swap:    "innerHTML",
+		},
+	}
+}
+
 func Nav(nav *NavProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -154,128 +179,47 @@ func Nav(nav *NavProps) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"bg-primary flex flex-row flex-[2_0_0] drop-shadow-background drop-shadow-md\"><div class=\"flex-1\"></div><div class=\"flex-1 flex flex-row\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"bg-quaternary flex flex-row flex-[2_0_0] drop-shadow-background drop-shadow-md text-white\"><div class=\"flex-1\"></div><div class=\"flex-1 flex flex-row\"><div class=\"px-2\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Button(structs.Button{
-			Common: structs.Common{
-				Name:  "page",
-				Value: "Home",
-			},
-			Hx: structs.Hx{
-				URL: "/index",
-			},
-		}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.TransparentButton(NavButton("/index", "Home")).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Button(structs.Button{
-			Common: structs.Common{
-				Name:  "page",
-				Value: "Blog",
-			},
-			Hx: structs.Hx{
-				URL: "/blog",
-			},
-		}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"px-2\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Button(structs.Button{
-			Common: structs.Common{
-				Name:  "page",
-				Value: "Theme",
-			},
-			Hx: structs.Hx{
-				URL: "/theme",
-			},
-		}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.TransparentButton(NavButton("/blog", "Blog")).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div></div><div class=\"flex-[7_0_0]\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"px-2\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		return nil
-	})
-}
-
-func Button(props structs.Button) templ.Component {
-	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
-			return templ_7745c5c3_CtxErr
-		}
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-		if !templ_7745c5c3_IsBuffer {
-			defer func() {
-				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err == nil {
-					templ_7745c5c3_Err = templ_7745c5c3_BufErr
-				}
-			}()
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var8 == nil {
-			templ_7745c5c3_Var8 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<button class=\"px-2 py-1 cursor-pointer hover:bg-tertiary-hover\" name=\"")
+		templ_7745c5c3_Err = components.TransparentButton(NavButton("/theme", "Theme")).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var9 string
-		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.Common.Name)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/layouts/nav.templ`, Line: 77, Col: 26}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"px-2\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" value=\"")
+		templ_7745c5c3_Err = components.TransparentButton(NavButton("/notes", "Notes")).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.Common.Value)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/layouts/nav.templ`, Line: 78, Col: 28}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div class=\"px-2\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "\" hx-get=\"")
+		templ_7745c5c3_Err = components.TransparentButton(NavButton("/admin", "Admin")).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(props.Hx.URL)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/layouts/nav.templ`, Line: 79, Col: 23}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-target=\"#skeleton\" hx-swap=\"innerHTML\" hx-trigger=\"click\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var12 string
-		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(props.Common.Value)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/layouts/nav.templ`, Line: 83, Col: 22}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></div><div class=\"flex-[7_0_0]\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -283,4 +227,15 @@ func Button(props structs.Button) templ.Component {
 	})
 }
 
+//	templ Button(props structs.Button) {
+//		<button
+//			class="px-2 py-1 cursor-pointer hover:bg-tertiary-hover"
+//			name={ props.Common.Name }
+//			value={ props.Common.Value }
+//			hx-get={ props.Hx.URL }
+//			hx-target="#skeleton"
+//			hx-swap="innerHTML"
+//			hx-trigger="click"
+//		>{ props.Common.Value }</button>
+//	}
 var _ = templruntime.GeneratedTemplate

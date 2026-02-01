@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/alterejoe/blog/internal/app"
+	"github.com/alterejoe/blog/internal/helpers"
 	htmxhtml "github.com/alterejoe/blog/ui/html"
 	htmxindex "github.com/alterejoe/blog/ui/html/index"
 )
@@ -47,7 +48,9 @@ func Theme(app *app.App) http.HandlerFunc {
 		props := &htmxindex.ThemeProps{
 			UserTheme: theme,
 		}
-		content := htmxindex.Theme(props)
-		htmxhtml.FullPage(content).Render(r.Context(), w)
+		// content := htmxindex.Theme(props)
+		// htmxhtml.FullPage(content).Render(r.Context(), w)
+
+		helpers.RenderContent(w, r, htmxindex.Theme(props), htmxhtml.FullPage)
 	}
 }

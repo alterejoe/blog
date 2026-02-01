@@ -1,11 +1,20 @@
 package layouts
 
 import "github.com/alterejoe/shared/structs"
-
-import "github.com/alterejoe/blog/ui/html/classes"
+import "github.com/alterejoe/shared/components"
 
 type NavProps struct {
 }
+
+const (
+	SlideLeft       = " w-full absolute left-0 z-50 transition-transform duration-500 ease-in-out flex flex-row"
+	SlideLeftClosed = SlideLeft + " -translate-x-full"
+	SlideLeftOpen   = SlideLeft + " translate-x-0"
+
+	SlideRight       = " w-full absolute right-0 z-50 transition-transform duration-500 ease-in-out flex flex-row"
+	SlideRightClosed = SlideRight + " translate-x-full"
+	SlideRightOpen   = SlideRight + " translate-x-0"
+)
 
 // 		class="w-full mt-10 absolute left-0 z-50 flex flex-row
 //                 transition-transform duration-300 ease-in-out -translate-x-full"
@@ -13,10 +22,10 @@ templ NavClosed(nav *NavProps) {
 	<div class="w-full relative h-12">
 		<div
 			id="nav"
-			class={ classes.SlideLeftClosed }
+			class={ SlideLeftClosed }
 			hx-get="/nav"
 			hx-trigger="load"
-			hx-swap="outerHTML swap:200ms settle:200ms"
+			hx-swap="outerHTML swap:100ms settle:30ms"
 			hx-target="#nav"
 		>
 			@Nav(nav)
@@ -29,56 +38,55 @@ templ NavClosed(nav *NavProps) {
 templ NavOpen(nav *NavProps) {
 	<div
 		id="nav"
-		class={ classes.SlideLeftOpen }
+		class={ SlideLeftOpen }
 	>
 		@Nav(nav)
 	</div>
 }
 
+func NavButton(path, name string) *structs.Button {
+	return &structs.Button{
+		Common: structs.Common{
+			Name:  "page",
+			Value: name,
+		},
+		Hx: structs.Hx{
+			URL:     path,
+			PushURL: path,
+			Target:  "#skeleton",
+			Trigger: "click",
+			Swap:    "innerHTML",
+		},
+	}
+}
+
 templ Nav(nav *NavProps) {
-	<div class="bg-primary flex flex-row flex-[2_0_0] drop-shadow-background drop-shadow-md">
+	<div class="bg-quaternary flex flex-row flex-[2_0_0] drop-shadow-background drop-shadow-md text-white">
 		<div class="flex-1"></div>
 		<div class="flex-1 flex flex-row">
-			@Button(structs.Button{
-				Common: structs.Common{
-					Name:  "page",
-					Value: "Home",
-				},
-				Hx: structs.Hx{
-					URL: "/index",
-				},
-			})
-			@Button(structs.Button{
-				Common: structs.Common{
-					Name:  "page",
-					Value: "Blog",
-				},
-				Hx: structs.Hx{
-					URL: "/blog",
-				},
-			})
-			@Button(structs.Button{
-				Common: structs.Common{
-					Name:  "page",
-					Value: "Theme",
-				},
-				Hx: structs.Hx{
-					URL: "/theme",
-				},
-			})
+			<div class="px-2"></div>
+			@components.TransparentButton(NavButton("/index", "Home"))
+			<div class="px-2"></div>
+			@components.TransparentButton(NavButton("/blog", "Blog"))
+			<div class="px-2"></div>
+			@components.TransparentButton(NavButton("/theme", "Theme"))
+			<div class="px-2"></div>
+			@components.TransparentButton(NavButton("/notes", "Notes"))
+			<div class="px-2"></div>
+			@components.TransparentButton(NavButton("/admin", "Admin"))
 		</div>
 	</div>
 	<div class="flex-[7_0_0]"></div>
 }
 
-templ Button(props structs.Button) {
-	<button
-		class="px-2 py-1 cursor-pointer hover:bg-tertiary-hover"
-		name={ props.Common.Name }
-		value={ props.Common.Value }
-		hx-get={ props.Hx.URL }
-		hx-target="#skeleton"
-		hx-swap="innerHTML"
-		hx-trigger="click"
-	>{ props.Common.Value }</button>
-}
+// templ Button(props structs.Button) {
+// 	<button
+// 		class="px-2 py-1 cursor-pointer hover:bg-tertiary-hover"
+// 		name={ props.Common.Name }
+// 		value={ props.Common.Value }
+// 		hx-get={ props.Hx.URL }
+// 		hx-target="#skeleton"
+// 		hx-swap="innerHTML"
+// 		hx-trigger="click"
+// 	>{ props.Common.Value }</button>
+// }

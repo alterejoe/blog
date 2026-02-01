@@ -43,10 +43,12 @@
 /* } */
 
 @theme {
-  --color-primary: #728e9d;
-  --color-secondary: #a994a3;
-  --color-tertiary: #bcaa9f;
-  --color-accent: #e7bfb7;
-  --color-neutral: #b2b7be;
-  --color-background: #47505e;
+  --color-primary: #414f54;
+  --color-secondary: #2f393c;
+  --color-tertiary: #877d67;
+  --color-quaternary: #60594a;
+  --color-accent: #866c67;
+  --color-neutral: #2f393c;
+  --color-background: #1a2123;
 }
+@source "/home/vagrant/projects/shared/gencomponents/components/*.templ";

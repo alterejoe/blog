@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+
 	"github.com/alterejoe/blog/internal/app"
 
 	"github.com/google/uuid"
@@ -27,58 +28,11 @@ func AuthPresentInSession(r context.Context, app *app.App) (AuthenticatedUser, e
 		return AuthenticatedUser{}, fmt.Errorf("invalid user uuid: %s", err)
 	}
 
-	// sessiong := app.Session().Get(r, "authenticatedClientGroup")
-	// if sessiong == nil {
-	// 	return AuthenticatedUser{}, fmt.Errorf("group not in session")
-	// }
-	//
-	// group := sessiong.(string)
-	//
-	// g, err := uuid.Parse(group)
-	// if err != nil {
-	// 	return AuthenticatedUser{}, fmt.Errorf("invalid group uuid: %s", err)
-	// }
-
 	return AuthenticatedUser{
 		UserID: u,
 		// GroupID: g,
 	}, nil
 }
-
-// func ValidateUserPresentInGroup(r context.Context, authuser AuthenticatedUser, tools *app.App) error {
-// 	tx, cleanup, err := tools.TxSystemRLSWithCleanup(r)
-// 	if err != nil {
-// 		return fmt.Errorf("ValidateUserPresentInGroup(transaction creation): %s", err)
-// 	}
-// 	defer cleanup(err == nil)
-//
-// 	params := db.UserPresentInGroupParams{
-// 		GroupID: pgtype.UUID{
-// 			Bytes: authuser.GroupID,
-// 			Valid: true,
-// 		},
-// 		UserID: pgtype.UUID{
-// 			Bytes: authuser.UserID,
-// 			Valid: true,
-// 		},
-// 	}
-// 	var present bool
-// 	p, err := tools.QueryTx(r, &sqlcqueries.UserPresentInGroup{
-// 		Params: params,
-// 	}, tx)
-// 	if err != nil {
-// 		return fmt.Errorf("ValidateUserPresentInGroup(database check): %s", err)
-// 	}
-//
-// 	present, ok := p.(bool)
-// 	if !ok {
-// 		return fmt.Errorf("ValidateUserPresentInGroup(bool conversion): %s", err)
-// 	}
-// 	if !present {
-// 		return fmt.Errorf("ValidateUserPresentInGroup(user not in group)")
-// 	}
-// 	return nil
-// }
 
 func ClientAuthMiddleware(app *app.App) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {

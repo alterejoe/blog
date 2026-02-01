@@ -10,7 +10,7 @@ templ FullPage(content templ.Component) {
 	@layouts.DoctypeStandard() {
 		<div class="p-1"></div>
 		@layouts.NavClosed(&layouts.NavProps{})
-		<div class="flex flex-1 flex-row min-h-0 max-h-full">
+		<div class="flex flex-1 flex-row min-h-0">
 			@SkeletonContainer(content)
 		</div>
 	}

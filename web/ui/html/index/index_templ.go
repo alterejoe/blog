@@ -8,9 +8,6 @@ package htmlindex
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/alterejoe/blog/ui/html/layouts"
-import "fmt"
-
 type IndexProps struct{}
 
 func Index(props *IndexProps) templ.Component {
@@ -34,24 +31,7 @@ func Index(props *IndexProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		for i := 0; i < 10; i++ {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"p-2\"></div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if i%2 == 0 {
-				templ_7745c5c3_Err = layouts.CardClosed(&layouts.CardProps{Id: fmt.Sprintf("card-%d", i), Orientation: "left"}).Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = layouts.CardClosed(&layouts.CardProps{Id: fmt.Sprintf("card-%d", i), Orientation: "right"}).Render(ctx, templ_7745c5c3_Buffer)
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<script>\n\t\tdocument.body.addEventListener(\"htmx:beforeSwap\", function (evt) {\n\t\t\tconsole.log(\"HTMX beforeSwap:\", evt.detail);\n\t\t});\n\t\tdocument.body.addEventListener(\"htmx:afterSwap\", function (evt) {\n\t\t\tconsole.log(\"HTMX afterSwap:\", evt.detail);\n\t\t});\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex-1 flex flex-col\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
