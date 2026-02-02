@@ -16,3 +16,13 @@ func Nav(app *app.App) http.HandlerFunc {
 		layouts.NavOpen(props).Render(r.Context(), w)
 	}
 }
+
+func Logout(app *app.App) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+
+		props := &layouts.LogoutNavProps{}
+
+		layouts.LogoutNavOpen(props).Render(r.Context(), w)
+	}
+}

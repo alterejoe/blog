@@ -19,10 +19,23 @@ type BlogCasbinRule struct {
 	V5    pgtype.Text
 }
 
+type BlogFleeting struct {
+	ID        pgtype.UUID
+	Date      string
+	TagID     int32
+	CreatedAt pgtype.Timestamp
+	UserID    pgtype.UUID
+}
+
 type BlogSession struct {
 	Token  string
 	Data   []byte
 	Expiry pgtype.Timestamptz
+}
+
+type BlogTag struct {
+	ID   int32
+	Name string
 }
 
 type BlogUser struct {

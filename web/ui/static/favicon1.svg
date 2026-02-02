@@ -1,0 +1,17 @@
+<!-- Variant 3A: Ring split into cool/warm arcs + white dot -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="31" fill="#1a2123"/>
+  <!-- ring arcs -->
+  <circle cx="32" cy="32" r="24" fill="none" stroke="#2f393c" stroke-width="4" stroke-linecap="round"
+          stroke-dasharray="75 999" stroke-dashoffset="0"/>
+  <circle cx="32" cy="32" r="24" fill="none" stroke="#60594a" stroke-width="4" stroke-linecap="round"
+          stroke-dasharray="75 999" stroke-dashoffset="-75"/>
+  <!-- subtle arc gradient suggestion using two-tone caps -->
+  <circle cx="32" cy="32" r="24" fill="none" stroke="#414f54" stroke-width="4" stroke-linecap="round"
+          stroke-dasharray="38 999" stroke-dashoffset="0" opacity="0.85"/>
+  <circle cx="32" cy="32" r="24" fill="none" stroke="#877d67" stroke-width="4" stroke-linecap="round"
+          stroke-dasharray="38 999" stroke-dashoffset="-75" opacity="0.85"/>
+  <!-- dot -->
+  <circle cx="32" cy="32" r="10" fill="#ffffff"/>
+</svg>
+

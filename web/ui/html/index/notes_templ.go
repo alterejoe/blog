@@ -8,15 +8,14 @@ package htmlindex
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/alterejoe/shared/components"
+import "github.com/alterejoe/shared/gencomponents/components"
 import "github.com/alterejoe/shared/structs"
 
 type NotesProps struct {
-	Fleeting        *FleetingProps
 	FolderStructure *FolderStructureProps
 }
 
-func Notes(props NotesProps) templ.Component {
+func Notes(props *NotesProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -37,11 +36,26 @@ func Notes(props NotesProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-row px-5 flex-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-row flex-1 min-h-0\"><!-- @Fleeting(props.Fleeting) -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Fleeting(props.Fleeting).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.DefaultDiv(&structs.Div{
+			Common: structs.Common{
+				ID:       "fleeting-container",
+				Name:     "fleeting-container",
+				Class:    "flex-1 flex flex-col",
+				Disabled: false,
+			},
+			Hx: structs.Hx{
+				Method:  structs.GET,
+				Target:  "#fleeting-container",
+				Swap:    "innerHTML",
+				URL:     "/notes/fleeting",
+				Trigger: "load, fleeting-updated",
+				Params:  "none",
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -57,7 +71,9 @@ func Notes(props NotesProps) templ.Component {
 	})
 }
 
-type FleetingProps struct{}
+type FleetingProps struct {
+	AlignInputTop bool
+}
 
 func Fleeting(props *FleetingProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -80,49 +96,182 @@ func Fleeting(props *FleetingProps) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"flex-col flex-1 flex min-h-0 bg-secondary justify-center m-3\"><div class=\"p-3\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"flex flex-col flex-1 min-h-0\"><div class=\"flex flex-row\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var3 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-			if !templ_7745c5c3_IsBuffer {
-				defer func() {
-					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err == nil {
-						templ_7745c5c3_Err = templ_7745c5c3_BufErr
-					}
-				}()
-			}
-			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"flex flex-row px-5\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = components.PrimaryTextarea(&structs.Textarea{
-				Common: structs.Common{
-					ID:       "fleeting",
-					Name:     "fleeting",
-					Disabled: false,
-				},
-				Placeholder: "write short stream of conciousness thoughts...",
-			}).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			return nil
-		})
-		templ_7745c5c3_Err = components.Form(
-			&structs.Form{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.TertiaryRadioButton(&structs.Radio{
+			Common: structs.Common{
+				ID:    "fleeting-input-top",
+				Name:  "fleeting-input-alignment",
+				Value: "Top",
+			},
+			Hx: structs.Hx{
+				Method:  structs.PUT,
+				Target:  "#fleeting-container",
+				Swap:    "innerHTML",
+				URL:     "/pref/fleeting_align/Top",
+				Trigger: "click",
+				Params:  "none",
+			},
+			Checked: props.AlignInputTop,
+		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"flex-1\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"-1\"></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.TertiaryRadioButton(&structs.Radio{
+			Common: structs.Common{
+				ID:    "fleeting-input-bottom",
+				Name:  "fleeting-input-alignment",
+				Value: "Bottom",
+			},
+			Hx: structs.Hx{
+				Method:  structs.PUT,
+				Target:  "#fleeting-container",
+				Swap:    "innerHTML",
+				URL:     "/pref/fleeting_align/Bottom",
+				Trigger: "click",
+				Params:  "none",
+			},
+			Checked: !props.AlignInputTop,
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div class=\"p-1\"></div><div class=\"flex flex-col flex-1 min-h-0 bg-secondary \">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if props.AlignInputTop {
+			templ_7745c5c3_Err = FleetingTop(props).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = FleetingBottom(props).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func FleetingTop(props *FleetingProps) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"p-3\"></div><div class=\"flex flex-row px-5\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.PrimaryInput(&structs.Input{
+			Common: structs.Common{
+				ID:       "fleeting-post",
+				Name:     "fleeting-post",
+				Disabled: false,
+			},
+			Hx: structs.Hx{
+				Method:    structs.POST,
+				URL:       "/notes/fleeting/new",
+				Target:    "#fleetting-view",
+				Include:   "",
+				Trigger:   "",
+				Swap:      "",
+				Indicator: "",
+				Vals:      "",
+				Confirm:   "",
+				PushURL:   "",
+				Boost:     false,
+			},
+			Placeholder: "write short stream of conciousness thoughts...",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div><div id=\"fleeting-notes-view\" class=\"flex-1\"></div><div class=\"flex-1\"></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func FleetingBottom(props *FleetingProps) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"flex-1\"></div><div class=\"flex flex-row px-5\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.PrimaryInput(&structs.Input{
+			Common: structs.Common{
+				ID:       "fleeting-post",
+				Name:     "fleeting-post",
+				Disabled: false,
+			},
+			Hx: structs.Hx{
+				Method:    structs.POST,
+				URL:       "/notes/fleeting/new",
+				Target:    "#fleetting-view",
+				Include:   "",
+				Trigger:   "",
+				Swap:      "",
+				Indicator: "",
+				Vals:      "",
+				Confirm:   "",
+				PushURL:   "",
+				Boost:     false,
+			},
+			Placeholder: "write short stream of conciousness thoughts...",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div><div class=\"p-3\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -148,12 +297,26 @@ func FolderStructure(props *FolderStructureProps) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var4 == nil {
-			templ_7745c5c3_Var4 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"flex-col flex-1 flex min-h-0 bg-quaternary justify-center m-3\"><div class=\"p-3\"></div><div class=\"flex flex-row px-5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div id=\"folder-container\" class=\"flex-col flex-1 flex min-h-0 \"><div class=\"flex flex-row\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.GhostRadioButton(&structs.Radio{
+			Common: structs.Common{
+				ID:    "",
+				Name:  "",
+				Value: "Takes up space",
+			},
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><div class=\"p-1\"></div><div class=\"flex flex-col px-5 bg-quaternary flex-1\"><div class=\"p-3\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -169,7 +332,7 @@ func FolderStructure(props *FolderStructureProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div><div class=\"flex-1\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

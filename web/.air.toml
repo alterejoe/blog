@@ -3,7 +3,7 @@ tmp_dir = "tmp"
 
 [build]
 bin = "./tmp/main"
-cmd = "go build -o ./tmp/main ./cmd/" # Changed: specify main.go explicitly
+cmd = "go build -o ./tmp/main ./cmd/"
 delay = 300
 exclude_dir = [
   "assets",
@@ -26,7 +26,8 @@ poll_interval = 0
 rerun = false
 rerun_delay = 500
 pre_cmd = []
-post_cmd = []
+post_cmd = ["task clean"]
+stop_cmd = ["task clean"]
 send_interrupt = true
 stop_on_error = false
 kill_delay = "500ms"
@@ -42,4 +43,4 @@ main_only = false
 time = false
 
 [misc]
-clean_on_exit = true
+clean_on_exit = false

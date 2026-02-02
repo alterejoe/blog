@@ -8,7 +8,7 @@ package htmlindex
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/alterejoe/shared/components"
+import "github.com/alterejoe/shared/gencomponents/components"
 import "github.com/alterejoe/shared/structs"
 
 type BlogProps struct{}
@@ -34,7 +34,7 @@ func Blog(props *IndexProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex-col flex-1 flex min-h-0 bg-secondary justify-center m-3\"><div class=\"p-3\"></div><div class=\"flex flex-row px-5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex-col flex-1 flex min-h-0 bg-secondary justify-center\"><div class=\"p-3\"></div><div class=\"flex flex-row px-5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

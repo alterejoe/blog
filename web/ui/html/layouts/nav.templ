@@ -1,28 +1,16 @@
 package layouts
 
 import "github.com/alterejoe/shared/structs"
-import "github.com/alterejoe/shared/components"
+import "github.com/alterejoe/shared/gencomponents/components"
 
 type NavProps struct {
 }
 
-const (
-	SlideLeft       = " w-full absolute left-0 z-50 transition-transform duration-500 ease-in-out flex flex-row"
-	SlideLeftClosed = SlideLeft + " -translate-x-full"
-	SlideLeftOpen   = SlideLeft + " translate-x-0"
-
-	SlideRight       = " w-full absolute right-0 z-50 transition-transform duration-500 ease-in-out flex flex-row"
-	SlideRightClosed = SlideRight + " translate-x-full"
-	SlideRightOpen   = SlideRight + " translate-x-0"
-)
-
-// 		class="w-full mt-10 absolute left-0 z-50 flex flex-row
-//                 transition-transform duration-300 ease-in-out -translate-x-full"
 templ NavClosed(nav *NavProps) {
-	<div class="w-full relative h-12">
+	<div class="w-full h-min flex flex-row">
 		<div
 			id="nav"
-			class={ SlideLeftClosed }
+			class="w-full left-0 z-50 transition-transform duration-500 ease-in-out flex flex-row -translate-x-full"
 			hx-get="/nav"
 			hx-trigger="load"
 			hx-swap="outerHTML swap:100ms settle:30ms"
@@ -33,12 +21,10 @@ templ NavClosed(nav *NavProps) {
 	</div>
 }
 
-// 		class="w-full mt-10 absolute left-0 z-50 flex flex-row
-//                 transition-transform duration-300 ease-in-out translate-x-0"
 templ NavOpen(nav *NavProps) {
 	<div
 		id="nav"
-		class={ SlideLeftOpen }
+		class="w-full left-0 z-50 transition-transform duration-500 ease-in-out flex flex-row translate-x-0"
 	>
 		@Nav(nav)
 	</div>
@@ -61,11 +47,11 @@ func NavButton(path, name string) *structs.Button {
 }
 
 templ Nav(nav *NavProps) {
-	<div class="bg-quaternary flex flex-row flex-[2_0_0] drop-shadow-background drop-shadow-md text-white">
+	<div class="bg-tertiary flex flex-row flex-[2_0_0] drop-shadow-background drop-shadow-md text-white my-1">
 		<div class="flex-1"></div>
 		<div class="flex-1 flex flex-row">
 			<div class="px-2"></div>
-			@components.TransparentButton(NavButton("/index", "Home"))
+			@components.TransparentButton(NavButton("/", "Home"))
 			<div class="px-2"></div>
 			@components.TransparentButton(NavButton("/blog", "Blog"))
 			<div class="px-2"></div>
@@ -79,14 +65,51 @@ templ Nav(nav *NavProps) {
 	<div class="flex-[7_0_0]"></div>
 }
 
-// templ Button(props structs.Button) {
-// 	<button
-// 		class="px-2 py-1 cursor-pointer hover:bg-tertiary-hover"
-// 		name={ props.Common.Name }
-// 		value={ props.Common.Value }
-// 		hx-get={ props.Hx.URL }
-// 		hx-target="#skeleton"
-// 		hx-swap="innerHTML"
-// 		hx-trigger="click"
-// 	>{ props.Common.Value }</button>
-// }
+type LogoutNavProps struct {
+}
+
+templ LogoutNavClosed(nav *LogoutNavProps) {
+	<div
+		id="logout-nav"
+		class="fixed top-0 right-0 z-50 transition-transform duration-500 ease-in-out translate-x-full"
+		hx-get="/nav/logout"
+		hx-trigger="load"
+		hx-swap="outerHTML swap:100ms settle:30ms"
+		hx-target="#logout-nav"
+	>
+		@LogoutNav(nav)
+	</div>
+}
+
+templ LogoutNavOpen(nav *LogoutNavProps) {
+	<div
+		id="logout-nav"
+		class="fixed top-0 right-0 z-50 transition-transform duration-500 ease-in-out translate-x-0"
+	>
+		@LogoutNav(nav)
+	</div>
+}
+
+templ LogoutNav(nav *LogoutNavProps) {
+	<div class="flex-[7_0_0]"></div>
+	<div class="bg-primary flex flex-row flex-[2_0_0] drop-shadow-background drop-shadow-md text-white my-1">
+		<div class="flex-1 flex flex-row justify-start">
+			@components.TransparentButton(NavButton("/settings", "Settings"))
+			<div class="px-2"></div>
+			@components.TransparentButton(NavButton("/profile", "Profile"))
+			<div class="px-2"></div>
+			<!-- @components.TransparentLink(NavButton("/auth/logout", "Logout")) -->
+			@components.TransparentLinkButton(&structs.Link{
+				Common: structs.Common{
+					ID:       "logout",
+					Name:     "logout",
+					Value:    "Logout",
+					Disabled: false,
+				},
+				Href: "/auth/logout",
+			})
+			<div class="px-2"></div>
+		</div>
+		<div class="flex-1"></div>
+	</div>
+}

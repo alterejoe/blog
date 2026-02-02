@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict EPLwny2gTrycXXfXVf8w6GrD7MVUxbU0QUulnnCPUpCdZoPbGyX3kMpctKHMzA6
+\restrict JkYRcKWKvyYMxhc4TQ0fJsNdQE6x69IMqcaP9N5dvUfETfBhrT1rSoPFpxJ2yDH
 
 -- Dumped from database version 17.6 (Debian 17.6-2.pgdg13+1)
 -- Dumped by pg_dump version 18.0
@@ -24,6 +24,30 @@ SET row_security = off;
 --
 
 CREATE SCHEMA blog;
+
+
+--
+-- Name: current_user_id(); Type: FUNCTION; Schema: blog; Owner: -
+--
+
+CREATE FUNCTION blog.current_user_id() RETURNS uuid
+    LANGUAGE sql STABLE
+    AS $$
+    SELECT
+        nullif (current_setting('app.current_user_id', TRUE), '')::uuid
+$$;
+
+
+--
+-- Name: is_owner(uuid); Type: FUNCTION; Schema: blog; Owner: -
+--
+
+CREATE FUNCTION blog.is_owner(user_id uuid) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+    SELECT
+        user_id = blog.current_user_id ()
+$$;
 
 
 --
@@ -56,6 +80,49 @@ CREATE TABLE blog.casbin_rule (
     v4 character varying(255),
     v5 character varying(255)
 );
+
+
+--
+-- Name: fleeting; Type: TABLE; Schema: blog; Owner: -
+--
+
+CREATE TABLE blog.fleeting (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    date text NOT NULL,
+    tag_id integer NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    user_id uuid
+);
+
+
+--
+-- Name: tags; Type: TABLE; Schema: blog; Owner: -
+--
+
+CREATE TABLE blog.tags (
+    id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+--
+-- Name: fleeting_note_type_id_seq; Type: SEQUENCE; Schema: blog; Owner: -
+--
+
+CREATE SEQUENCE blog.fleeting_note_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: fleeting_note_type_id_seq; Type: SEQUENCE OWNED BY; Schema: blog; Owner: -
+--
+
+ALTER SEQUENCE blog.fleeting_note_type_id_seq OWNED BY blog.tags.id;
 
 
 --
@@ -104,11 +171,34 @@ CREATE TABLE blog.users (
 
 
 --
+-- Name: tags id; Type: DEFAULT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.tags ALTER COLUMN id SET DEFAULT nextval('blog.fleeting_note_type_id_seq'::regclass);
+
+
+--
 -- Name: casbin_rule casbin_rule_pkey; Type: CONSTRAINT; Schema: blog; Owner: -
 --
 
 ALTER TABLE ONLY blog.casbin_rule
     ADD CONSTRAINT casbin_rule_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags fleeting_note_type_pkey; Type: CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.tags
+    ADD CONSTRAINT fleeting_note_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: fleeting fleeting_pkey; Type: CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.fleeting
+    ADD CONSTRAINT fleeting_pkey PRIMARY KEY (id);
 
 
 --
@@ -160,6 +250,13 @@ ALTER TABLE ONLY blog.users
 
 
 --
+-- Name: idx_fleeting_date; Type: INDEX; Schema: blog; Owner: -
+--
+
+CREATE INDEX idx_fleeting_date ON blog.fleeting USING btree (date);
+
+
+--
 -- Name: sessions_last_seen_idx; Type: INDEX; Schema: blog; Owner: -
 --
 
@@ -188,6 +285,22 @@ CREATE TRIGGER users_updated_at BEFORE UPDATE ON blog.users FOR EACH ROW EXECUTE
 
 
 --
+-- Name: fleeting fleeting_note_type_id_fkey; Type: FK CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.fleeting
+    ADD CONSTRAINT fleeting_note_type_id_fkey FOREIGN KEY (tag_id) REFERENCES blog.tags(id);
+
+
+--
+-- Name: fleeting fleeting_user_id_fkey; Type: FK CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.fleeting
+    ADD CONSTRAINT fleeting_user_id_fkey FOREIGN KEY (user_id) REFERENCES blog.users(id);
+
+
+--
 -- Name: user_sessions user_sessions_last_token_fkey; Type: FK CONSTRAINT; Schema: blog; Owner: -
 --
 
@@ -204,8 +317,21 @@ ALTER TABLE ONLY blog.user_sessions
 
 
 --
+-- Name: fleeting; Type: ROW SECURITY; Schema: blog; Owner: -
+--
+
+ALTER TABLE blog.fleeting ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: fleeting fleeting_owner; Type: POLICY; Schema: blog; Owner: -
+--
+
+CREATE POLICY fleeting_owner ON blog.fleeting USING (blog.is_owner(user_id)) WITH CHECK (blog.is_owner(user_id));
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-\unrestrict EPLwny2gTrycXXfXVf8w6GrD7MVUxbU0QUulnnCPUpCdZoPbGyX3kMpctKHMzA6
+\unrestrict JkYRcKWKvyYMxhc4TQ0fJsNdQE6x69IMqcaP9N5dvUfETfBhrT1rSoPFpxJ2yDH
 

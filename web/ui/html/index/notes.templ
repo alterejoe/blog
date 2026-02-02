@@ -1,48 +1,160 @@
 package htmlindex
 
-import "github.com/alterejoe/shared/components"
+import "github.com/alterejoe/shared/gencomponents/components"
 import "github.com/alterejoe/shared/structs"
 
 type NotesProps struct {
-	Fleeting        *FleetingProps
 	FolderStructure *FolderStructureProps
 }
 
-templ Notes(props NotesProps) {
-	<div class="flex flex-row px-5 flex-1">
-		@Fleeting(props.Fleeting)
+templ Notes(props *NotesProps) {
+	<div class="flex flex-row flex-1 min-h-0">
+		<!-- @Fleeting(props.Fleeting) -->
+		@components.DefaultDiv(&structs.Div{
+			Common: structs.Common{
+				ID:       "fleeting-container",
+				Name:     "fleeting-container",
+				Class:    "flex-1 flex flex-col",
+				Disabled: false,
+			},
+			Hx: structs.Hx{
+				Method:  structs.GET,
+				Target:  "#fleeting-container",
+				Swap:    "innerHTML",
+				URL:     "/notes/fleeting",
+				Trigger: "load, fleeting-updated",
+				Params:  "none",
+			},
+		})
 		@FolderStructure(props.FolderStructure)
 	</div>
 }
 
-type FleetingProps struct{}
+type FleetingProps struct {
+	AlignInputTop bool
+}
 
 templ Fleeting(props *FleetingProps) {
-	<div class="flex-col flex-1 flex min-h-0 bg-secondary justify-center m-3">
-		<div class="p-3"></div>
-		@components.Form(
-			&structs.Form{}) {
-			<div class="flex flex-row px-5">
-				@components.PrimaryTextarea(&structs.Textarea{
-					Common: structs.Common{
-						ID:       "fleeting",
-						Name:     "fleeting",
-						Disabled: false,
-					},
-					Placeholder: "write short stream of conciousness thoughts...",
-				})
-			</div>
-		}
-		<div class="flex-1"></div>
+	<div class="flex flex-col flex-1 min-h-0">
+		<div class="flex flex-row">
+			@components.TertiaryRadioButton(&structs.Radio{
+				Common: structs.Common{
+					ID:    "fleeting-input-top",
+					Name:  "fleeting-input-alignment",
+					Value: "Top",
+				},
+				Hx: structs.Hx{
+					Method:  structs.PUT,
+					Target:  "#fleeting-container",
+					Swap:    "innerHTML",
+					URL:     "/pref/fleeting_align/Top",
+					Trigger: "click",
+					Params:  "none",
+				},
+				Checked: props.AlignInputTop,
+			})
+			<div class="-1"></div>
+			@components.TertiaryRadioButton(&structs.Radio{
+				Common: structs.Common{
+					ID:    "fleeting-input-bottom",
+					Name:  "fleeting-input-alignment",
+					Value: "Bottom",
+				},
+				Hx: structs.Hx{
+					Method:  structs.PUT,
+					Target:  "#fleeting-container",
+					Swap:    "innerHTML",
+					URL:     "/pref/fleeting_align/Bottom",
+					Trigger: "click",
+					Params:  "none",
+				},
+				Checked: !props.AlignInputTop,
+			})
+		</div>
+		<div class="p-1"></div>
+		<div class="flex flex-col flex-1 min-h-0 bg-secondary ">
+			if props.AlignInputTop {
+				@FleetingTop(props)
+			} else {
+				@FleetingBottom(props)
+			}
+		</div>
 	</div>
+}
+
+templ FleetingTop(props *FleetingProps) {
+	<div class="p-3"></div>
+	<div class="flex flex-row px-5">
+		@components.PrimaryInput(&structs.Input{
+			Common: structs.Common{
+				ID:       "fleeting-post",
+				Name:     "fleeting-post",
+				Disabled: false,
+			},
+			Hx: structs.Hx{
+				Method:    structs.POST,
+				URL:       "/notes/fleeting/new",
+				Target:    "#fleetting-view",
+				Include:   "",
+				Trigger:   "",
+				Swap:      "",
+				Indicator: "",
+				Vals:      "",
+				Confirm:   "",
+				PushURL:   "",
+				Boost:     false,
+			},
+			Placeholder: "write short stream of conciousness thoughts...",
+		})
+	</div>
+	<div id="fleeting-notes-view" class="flex-1"></div>
+	<div class="flex-1"></div>
+}
+
+templ FleetingBottom(props *FleetingProps) {
+	<div class="flex-1"></div>
+	<div class="flex flex-row px-5">
+		@components.PrimaryInput(&structs.Input{
+			Common: structs.Common{
+				ID:       "fleeting-post",
+				Name:     "fleeting-post",
+				Disabled: false,
+			},
+			Hx: structs.Hx{
+				Method:    structs.POST,
+				URL:       "/notes/fleeting/new",
+				Target:    "#fleetting-view",
+				Include:   "",
+				Trigger:   "",
+				Swap:      "",
+				Indicator: "",
+				Vals:      "",
+				Confirm:   "",
+				PushURL:   "",
+				Boost:     false,
+			},
+			Placeholder: "write short stream of conciousness thoughts...",
+		})
+	</div>
+	<div class="p-3"></div>
 }
 
 type FolderStructureProps struct{}
 
 templ FolderStructure(props *FolderStructureProps) {
-	<div class="flex-col flex-1 flex min-h-0 bg-quaternary justify-center m-3">
-		<div class="p-3"></div>
-		<div class="flex flex-row px-5">
+	<div id="folder-container" class="flex-col flex-1 flex min-h-0 ">
+		<div class="flex flex-row">
+			@components.GhostRadioButton(&structs.Radio{
+				Common: structs.Common{
+					ID:    "",
+					Name:  "",
+					Value: "Takes up space",
+				},
+			})
+		</div>
+		<div class="p-1"></div>
+		<div class="flex flex-col px-5 bg-quaternary flex-1">
+			<div class="p-3"></div>
 			@components.TertiaryTextarea(&structs.Textarea{
 				Common: structs.Common{
 					ID:       "folder-structure",
@@ -53,6 +165,5 @@ templ FolderStructure(props *FolderStructureProps) {
 				Placeholder: "This is where you write your folder structure",
 			})
 		</div>
-		<div class="flex-1"></div>
 	</div>
 }

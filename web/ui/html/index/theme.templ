@@ -5,7 +5,7 @@ type ThemeProps struct {
 }
 
 templ Theme(props *ThemeProps) {
-	<div class="flex-col flex-1 flex min-h-0 bg-secondary justify-center m-3">
+	<div class="flex-col flex-1 flex min-h-0 bg-secondary justify-center">
 		for key, value:= range *props.UserTheme {
 			<div class="p-3">{ key }</div>
 			<div class="p-3">{ value }</div>

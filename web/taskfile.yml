@@ -8,27 +8,34 @@ tasks:
       - watch:templ-local
       # - watch:templ-shared
       - watch:tailwind
+      # - run:go
       - run:air
 
   clean:
     desc: "Clean up all dev processes and ports"
     cmds:
       - killall -9 main 2>/dev/null || true
+      - killall -9 air 2>/dev/null || true
       - lsof -ti:4444 | xargs kill -9 2>/dev/null || true
+      - rm -rf ./tmp
       - echo "Cleaned up processes on port 4444"
 
   run:air:
     cmds:
       - air
 
+  run:go:
+    cmds:
+      - go run ./cmd/
+
   watch:templ-local:
     sources:
       - "./**/*.templ"
     cmds:
-      - templ generate
+      - templ generate --watch
 
   watch:templ-shared:
-    dir: ../../shared/components
+    dir: ../../shared/gencomponents/components
     sources:
       - "./**/*.templ"
     cmds:
@@ -41,3 +48,4 @@ tasks:
         -c ./tailwind.config.js
         -i ./ui/static/globals.css
         -o ./ui/static/css/output.css
+        --watch
