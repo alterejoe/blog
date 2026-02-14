@@ -59,13 +59,24 @@ func GetRoutes(app *app.App) *chi.Mux {
 
 	serveStaticFile("/static/css/output.css", "./ui/static/css/output.css", r)
 	serveStaticFile("/static/js/htmx.min.js", "./ui/static/js/htmx.min.js", r)
-	serveStaticFile("/static/js/landing.js", "./ui/static/js/landing.js", r)
+	// serveStaticFile("/static/js/landing.js", "./ui/static/js/landing.js", r)
+	serveStaticFile("/static/js/time.js", "./ui/static/js/time.js", r)
 
 	serveStaticFile("/static/js/form-behavior/constraints.js", "./ui/static/js/form-behavior/constraints.js", r)
 	serveStaticFile("/static/js/form-behavior/core.js", "./ui/static/js/form-behavior/core.js", r)
 	serveStaticFile("/static/js/form-behavior/dirty-tracking.js", "./ui/static/js/form-behavior/dirty-tracking.js", r)
 	serveStaticFile("/static/js/form-behavior/init.js", "./ui/static/js/form-behavior/init.js", r)
 	serveStaticFile("/static/js/form-behavior/sanitizers.js", "./ui/static/js/form-behavior/sanitizers.js", r)
+
+	serveStaticFile("/static/js/vim/state.js", "./ui/static/js/vim/state.js", r)
+	serveStaticFile("/static/js/vim/keymap.js", "./ui/static/js/vim/keymap.js", r)
+	serveStaticFile("/static/js/vim/dom.js", "./ui/static/js/vim/dom.js", r)
+	serveStaticFile("/static/js/vim/modes.js", "./ui/static/js/vim/modes.js", r)
+	serveStaticFile("/static/js/vim/movement.js", "./ui/static/js/vim/movement.js", r)
+	serveStaticFile("/static/js/vim/actions.js", "./ui/static/js/vim/actions.js", r)
+	serveStaticFile("/static/js/vim/keys.js", "./ui/static/js/vim/keys.js", r)
+	serveStaticFile("/static/js/vim/init.js", "./ui/static/js/vim/init.js", r)
+
 	serveStaticFile("/static/favicon.svg", "./ui/static/favicon1.svg", r)
 
 	r.Route("/auth", func(r chi.Router) {
@@ -88,7 +99,15 @@ func GetRoutes(app *app.App) *chi.Mux {
 			r.Get("/", index.Notes(app))
 			r.Route("/fleeting", func(r chi.Router) {
 				r.Get("/", index.FleetingContainer(app))
+				r.Get("/view", index.FleetingNotesViewContainer(app))
 				r.Post("/new", index.PostNewNote(app))
+				r.Route("/{id}", func(r chi.Router) {
+					r.Get("/edit", index.EditNote(app))
+					r.Patch("/edit", index.EditNote(app))
+					r.Patch("/delete", index.SoftDeleteNote(app))
+					r.Patch("/restore", index.RestoreNote(app))
+
+				})
 			})
 		})
 		if os.Getenv("ENVIRONMENT") == "dev" {
@@ -96,6 +115,7 @@ func GetRoutes(app *app.App) *chi.Mux {
 			r.Get("/debug/empty", index.DebugEmpty(app))
 		}
 		r.Put("/pref/{key}/{value}", index.SetPreference(app))
+
 		r.Group(func(r chi.Router) {
 			r.Route("/admin", func(r chi.Router) {
 				r.Get("/", index.Blog(app))

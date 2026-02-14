@@ -5,11 +5,15 @@ package htmlindex
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import "github.com/a-h/templ"
-import templruntime "github.com/a-h/templ/runtime"
+import (
+	"time"
 
-import "github.com/alterejoe/shared/gencomponents/components"
-import "github.com/alterejoe/shared/structs"
+	"github.com/a-h/templ"
+	templruntime "github.com/a-h/templ/runtime"
+	"github.com/alterejoe/blog/db"
+	"github.com/alterejoe/shared/gencomponents/components"
+	"github.com/alterejoe/shared/structs"
+)
 
 type NotesProps struct {
 	FolderStructure *FolderStructureProps
@@ -44,7 +48,7 @@ func Notes(props *NotesProps) templ.Component {
 			Common: structs.Common{
 				ID:       "fleeting-container",
 				Name:     "fleeting-container",
-				Class:    "flex-1 flex flex-col",
+				Class:    "flex-1 flex flex-col font-mono",
 				Disabled: false,
 			},
 			Hx: structs.Hx{
@@ -73,6 +77,7 @@ func Notes(props *NotesProps) templ.Component {
 
 type FleetingProps struct {
 	AlignInputTop bool
+	TimeFormat    string
 }
 
 func Fleeting(props *FleetingProps) templ.Component {
@@ -119,10 +124,6 @@ func Fleeting(props *FleetingProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"-1\"></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		templ_7745c5c3_Err = components.TertiaryRadioButton(&structs.Radio{
 			Common: structs.Common{
 				ID:    "fleeting-input-bottom",
@@ -142,22 +143,76 @@ func Fleeting(props *FleetingProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div class=\"p-1\"></div><div class=\"flex flex-col flex-1 min-h-0 bg-secondary \">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"flex-1\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if props.AlignInputTop {
-			templ_7745c5c3_Err = FleetingTop(props).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-		} else {
-			templ_7745c5c3_Err = FleetingBottom(props).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
+		templ_7745c5c3_Err = components.TertiaryRadioButton(&structs.Radio{
+			Common: structs.Common{
+				ID:    "fleeting-input-absolute",
+				Name:  "fleeting-input-time",
+				Value: "Absolute",
+			},
+			Hx: structs.Hx{
+				Method:  structs.PUT,
+				Target:  "#fleeting-container",
+				Swap:    "innerHTML",
+				URL:     "/pref/fleeting_time/Absolute",
+				Trigger: "click",
+				Params:  "none",
+			},
+			Checked: props.TimeFormat == "Absolute",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div>")
+		templ_7745c5c3_Err = components.TertiaryRadioButton(&structs.Radio{
+			Common: structs.Common{
+				ID:    "fleeting-input-compact",
+				Name:  "fleeting-input-time",
+				Value: "Compact",
+			},
+			Hx: structs.Hx{
+				Method:  structs.PUT,
+				Target:  "#fleeting-container",
+				Swap:    "innerHTML",
+				URL:     "/pref/fleeting_time/Compact",
+				Trigger: "click",
+				Params:  "none",
+			},
+			Checked: props.TimeFormat == "Compact",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.TertiaryRadioButton(&structs.Radio{
+			Common: structs.Common{
+				ID:    "fleeting-input-verbose",
+				Name:  "fleeting-input-time",
+				Value: "Verbose",
+			},
+			Hx: structs.Hx{
+				Method:  structs.PUT,
+				Target:  "#fleeting-container",
+				Swap:    "innerHTML",
+				URL:     "/pref/fleeting_time/Verbose",
+				Trigger: "click",
+				Params:  "none",
+			},
+			Checked: props.TimeFormat == "Verbose",
+		}).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div class=\"p-1\"></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = FleetingLayout(props).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -165,7 +220,18 @@ func Fleeting(props *FleetingProps) templ.Component {
 	})
 }
 
-func FleetingTop(props *FleetingProps) templ.Component {
+//	templ FleetingTop(props *FleetingProps) {
+//		<div class="p-3"></div>
+//		@FleetingInput(props)
+//		<div id="" class="flex-1"></div>
+//	}
+//
+//	templ FleetingBottom(props *FleetingProps) {
+//		<div id="fleeting-notes-view" class="flex-1"></div>
+//		@FleetingInput(props)
+//		<div class="p-3"></div>
+//	}
+func FleetingLayout(props *FleetingProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -186,35 +252,46 @@ func FleetingTop(props *FleetingProps) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"p-3\"></div><div class=\"flex flex-row px-5\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"flex flex-col flex-1 min-h-0 bg-secondary px-5 overflow-hidden\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.PrimaryInput(&structs.Input{
-			Common: structs.Common{
-				ID:       "fleeting-post",
-				Name:     "fleeting-post",
-				Disabled: false,
-			},
-			Hx: structs.Hx{
-				Method:    structs.POST,
-				URL:       "/notes/fleeting/new",
-				Target:    "#fleetting-view",
-				Include:   "",
-				Trigger:   "",
-				Swap:      "",
-				Indicator: "",
-				Vals:      "",
-				Confirm:   "",
-				PushURL:   "",
-				Boost:     false,
-			},
-			Placeholder: "write short stream of conciousness thoughts...",
-		}).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
+		if props.AlignInputTop {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"p-3\"></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = FleetingInput(props).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, " <div class=\"p-1\"></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = FleetingNotesLoader(true).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = FleetingNotesLoader(false).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, " <div class=\"p-1\"></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = FleetingInput(props).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, " <div class=\"p-3\"></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div><div id=\"fleeting-notes-view\" class=\"flex-1\"></div><div class=\"flex-1\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -222,7 +299,7 @@ func FleetingTop(props *FleetingProps) templ.Component {
 	})
 }
 
-func FleetingBottom(props *FleetingProps) templ.Component {
+func FleetingNotesLoader(alignTop bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -243,7 +320,50 @@ func FleetingBottom(props *FleetingProps) templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"flex-1\"></div><div class=\"flex flex-row px-5\">")
+		if alignTop {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div id=\"fleeting-notes-view\" name=\"fleeting-notes-view\" class=\"flex-1 flex flex-col min-h-0 overflow-y-auto scrollbar-styled scrollbar-arrows scrollbar-arrows-rounded scrollbar-w-lg scrollbar-thumb-primary scrollbar-thumb-hover-primary-hover scrollbar-thumb-active-primary-hover scrollbar-arrow-bg-primary scrollbar-arrow-hover-primary-hover scrollbar-arrow-active-primary-hover scrollbar-track-secondary pr-1 gap-1\" hx-on::after-settle=\"document.querySelector('#fleeting-notes-view').scrollTop = 0; document.getElementById('fleeting-post').value = '';\" hx-get=\"/notes/fleeting/view\" hx-target=\"#fleeting-notes-view\" hx-trigger=\"load\" hx-swap=\"innerHTML\"></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div id=\"fleeting-notes-view\" name=\"fleeting-notes-view\" class=\"flex-1 flex flex-col min-h-0 overflow-y-auto scrollbar-styled scrollbar-arrows scrollbar-arrows-rounded scrollbar-w-lg scrollbar-thumb-primary scrollbar-thumb-hover-primary-hover scrollbar-thumb-active-primary-hover scrollbar-arrow-bg-primary scrollbar-arrow-hover-primary-hover scrollbar-arrow-active-primary-hover scrollbar-track-secondary pr-1 gap-1\" hx-on::after-settle=\"document.querySelector('#fleeting-notes-view').scrollTop = document.querySelector('#fleeting-notes-view').scrollHeight; document.getElementById('fleeting-post').value = '';\" hx-get=\"/notes/fleeting/view\" hx-target=\"#fleeting-notes-view\" hx-trigger=\"load\" hx-swap=\"innerHTML\"></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		return nil
+	})
+}
+
+func swapFromAlign(align bool) string {
+	if align {
+		return "afterbegin" // input top: new notes at visual top
+	}
+	return "beforeend" // input bottom + flex-col-reverse: new notes at visual bottom
+}
+
+func FleetingInput(props *FleetingProps) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"flex flex-row\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -254,24 +374,218 @@ func FleetingBottom(props *FleetingProps) templ.Component {
 				Disabled: false,
 			},
 			Hx: structs.Hx{
-				Method:    structs.POST,
-				URL:       "/notes/fleeting/new",
-				Target:    "#fleetting-view",
-				Include:   "",
-				Trigger:   "",
-				Swap:      "",
-				Indicator: "",
-				Vals:      "",
-				Confirm:   "",
-				PushURL:   "",
-				Boost:     false,
+				Method:  structs.POST,
+				URL:     "/notes/fleeting/new",
+				Target:  "#fleeting-notes-view",
+				Trigger: "keyup[key=='Enter']",
+				Swap:    swapFromAlign(props.AlignInputTop),
+				Params:  "*",
+				Boost:   false,
 			},
 			Placeholder: "write short stream of conciousness thoughts...",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div><div class=\"p-3\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div id=\"fleeting-cursor-display\" class=\"text-md p-2 rounded w-full bg-primary border border-primary text-white whitespace-pre\"></div><div id=\"fleeting-post-errors\" class=\"text-red-600 text-sm mt-1 hidden\"></div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+type FleetingNotesViewProps struct {
+	Notes         []db.BlogFleeting
+	AlignInputTop bool
+}
+
+func flexColOrder(align bool) string {
+	if !align {
+		return "flex-col-reverse"
+	}
+	return "flex-col"
+}
+
+func FleetingNotesView(props *FleetingNotesViewProps) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		if !props.AlignInputTop {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div class=\"flex-1\"></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for i := len(props.Notes) - 1; i >= 0; i-- {
+				templ_7745c5c3_Err = FleetingNote(&FleetingNoteProps{Note: &props.Notes[i]}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+		} else {
+			for _, note := range props.Notes {
+				templ_7745c5c3_Err = FleetingNote(&FleetingNoteProps{Note: &note}).Render(ctx, templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+		}
+		return nil
+	})
+}
+
+type FleetingNoteProps struct {
+	Note *db.BlogFleeting
+}
+
+// Read-only note (unchanged)
+func FleetingNote(props *FleetingNoteProps) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var7 == nil {
+			templ_7745c5c3_Var7 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<div class=\"fleeting-note p-3 rounded-md bg-quaternary text-white text-sm flex flex-row border border-transparent\" data-note-id=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var8 string
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(props.Note.ID.String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/index/notes.templ`, Line: 250, Col: 39}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\"><p>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var9 string
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.Note.Content)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/index/notes.templ`, Line: 252, Col: 25}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</p><span class=\"flex-1\"></span> <span class=\"text-xs text-white/50 mt-1 block min-w-max\" data-utc=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var10 string
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.Note.CreatedAt.Time.Format(time.RFC3339))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/index/notes.templ`, Line: 254, Col: 116}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\"></span></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+// Edit mode — replaces the note when user presses i
+func FleetingNoteEdit(props *FleetingNoteProps) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var11 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var11 == nil {
+			templ_7745c5c3_Var11 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"fleeting-note p-3 rounded-md bg-quaternary text-white text-sm flex flex-row border border-white \" data-note-id=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(props.Note.ID.String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/index/notes.templ`, Line: 262, Col: 39}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "\"><input type=\"text\" value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var13 string
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(props.Note.Content)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/index/notes.templ`, Line: 266, Col: 29}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\" data-bwignore autocomplete=\"off\" class=\"bg-transparent text-white text-sm outline-none w-full\"> <span class=\"flex-1\"></span> <span class=\"text-xs text-white/50 mt-1 block  min-w-max\" data-utc=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var14 string
+		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(props.Note.CreatedAt.Time.Format(time.RFC3339))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `ui/html/index/notes.templ`, Line: 272, Col: 117}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\"></span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -297,12 +611,12 @@ func FolderStructure(props *FolderStructureProps) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var5 == nil {
-			templ_7745c5c3_Var5 = templ.NopComponent
+		templ_7745c5c3_Var15 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var15 == nil {
+			templ_7745c5c3_Var15 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div id=\"folder-container\" class=\"flex-col flex-1 flex min-h-0 \"><div class=\"flex flex-row\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<div id=\"folder-container\" class=\"flex-col flex-1 flex min-h-0 \"><div class=\"flex flex-row\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -316,7 +630,7 @@ func FolderStructure(props *FolderStructureProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><div class=\"p-1\"></div><div class=\"flex flex-col px-5 bg-quaternary flex-1\"><div class=\"p-3\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</div><div class=\"p-1\"></div><div class=\"flex flex-col bg-quaternary flex-1\"><div class=\"p-3\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -332,7 +646,7 @@ func FolderStructure(props *FolderStructureProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

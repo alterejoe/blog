@@ -1,15 +1,14 @@
 @import "tailwindcss";
-
 @plugin "@iconify/tailwind4";
+@source "/home/vagrant/projects/shared/gencomponents/components/*.templ";
+
 @layer utilities {
-  /* Chrome, Safari and Opera */
   .scrollbar-hidden::-webkit-scrollbar {
     display: none;
   }
-
   .scrollbar-hidden {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 }
 
@@ -33,22 +32,258 @@
     @apply text-base;
   }
 }
-
-/* @theme { */
-/*   --color-primary: #6d5a67; */
-/*   --color-secondary: #435863; */
-/*   --color-tertiary: #806e62; */
-/*   --color-accent: #bb776b; */
-/*   --color-neutral: #747a83; */
-/* } */
-
 @theme {
   --color-primary: #414f54;
+  --color-primary-hover: #5e696e;
+
   --color-secondary: #2f393c;
+  --color-secondary-hover: #4e5759;
+
   --color-tertiary: #877d67;
+  --color-tertiary-hover: #99917e;
+
   --color-quaternary: #60594a;
+  --color-quaternary-hover: #787265;
+
   --color-accent: #866c67;
+  --color-accent-hover: #98827e;
+
   --color-neutral: #2f393c;
+  --color-neutral-hover: #4e5759;
+
   --color-background: #1a2123;
+  --color-background-hover: #3c4244;
+  /* } */
+  /* @theme { */
+  /* --color-primary: #414f54; */
+  /* --color-secondary: #2f393c; */
+  /* --color-tertiary: #877d67; */
+  /* --color-quaternary: #60594a; */
+  /* --color-accent: #866c67; */
+  /* --color-neutral: #2f393c; */
+  /* --color-background: #1a2123; */
+
+  --scrollbar-width-sm: 6px;
+  --scrollbar-width-md: 10px;
+  --scrollbar-width-lg: 14px;
+  --scrollbar-width-xl: 18px;
+
+  --scrollbar-spacing-sm: 2px;
+  --scrollbar-spacing-md: 4px;
+  --scrollbar-spacing-lg: 6px;
+  --scrollbar-spacing-xl: 8px;
+
+  --tw-scrollbar-thumb-color: transparent;
+  --tw-scrollbar-thumb-hover: transparent;
+  --tw-scrollbar-thumb-active: transparent;
+  --tw-scrollbar-track-color: transparent;
+  --tw-scrollbar-width: 8px;
+  --tw-scrollbar-margin-t: 0px;
+  --tw-scrollbar-margin-b: 0px;
+
+  --tw-scrollbar-arrow-bg: transparent;
+  --tw-scrollbar-arrow-hover: transparent;
+  --tw-scrollbar-arrow-active: transparent;
 }
-@source "/home/vagrant/projects/shared/gencomponents/components/*.templ";
+
+/* Scrollbar visibility */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Scrollbar width */
+@utility scrollbar-w-* {
+  --tw-scrollbar-width: --value(--scrollbar-width-*);
+}
+
+/* Margin - y axis */
+@utility scrollbar-my-* {
+  --tw-scrollbar-margin-t: --value(--scrollbar-spacing-*);
+  --tw-scrollbar-margin-b: --value(--scrollbar-spacing-*);
+}
+
+@utility scrollbar-mt-* {
+  --tw-scrollbar-margin-t: --value(--scrollbar-spacing-*);
+}
+
+@utility scrollbar-mb-* {
+  --tw-scrollbar-margin-b: --value(--scrollbar-spacing-*);
+}
+
+/* Thumb colors */
+@utility scrollbar-thumb-* {
+  --tw-scrollbar-thumb-color: --value(--color-*);
+}
+
+@utility scrollbar-thumb-hover-* {
+  --tw-scrollbar-thumb-hover: --value(--color-*);
+}
+
+@utility scrollbar-thumb-active-* {
+  --tw-scrollbar-thumb-active: --value(--color-*);
+}
+
+/* Track color */
+@utility scrollbar-track-* {
+  --tw-scrollbar-track-color: --value(--color-*);
+}
+
+/* Arrow colors */
+@utility scrollbar-arrow-bg-* {
+  --tw-scrollbar-arrow-bg: --value(--color-*);
+}
+
+@utility scrollbar-arrow-hover-* {
+  --tw-scrollbar-arrow-hover: --value(--color-*);
+}
+
+@utility scrollbar-arrow-active-* {
+  --tw-scrollbar-arrow-active: --value(--color-*);
+}
+
+/* Main styled scrollbar */
+@utility scrollbar-styled {
+  &::-webkit-scrollbar {
+    width: var(--tw-scrollbar-width);
+    height: var(--tw-scrollbar-width);
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--tw-scrollbar-track-color);
+    margin-top: var(--tw-scrollbar-margin-t);
+    margin-bottom: var(--tw-scrollbar-margin-b);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--tw-scrollbar-thumb-color);
+    border-radius: 999px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(
+      --tw-scrollbar-thumb-hover,
+      var(--tw-scrollbar-thumb-color)
+    );
+  }
+  &::-webkit-scrollbar-thumb:active {
+    background: var(
+      --tw-scrollbar-thumb-active,
+      var(--tw-scrollbar-thumb-hover, var(--tw-scrollbar-thumb-color))
+    );
+  }
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+}
+
+/* Single arrows (one at each end) */
+@utility scrollbar-arrows {
+  &::-webkit-scrollbar-button:single-button {
+    display: block;
+    background: var(--tw-scrollbar-arrow-bg);
+    height: var(--tw-scrollbar-width);
+    width: var(--tw-scrollbar-width);
+  }
+  &::-webkit-scrollbar-button:single-button:hover {
+    background: var(
+      --tw-scrollbar-arrow-hover,
+      var(--tw-scrollbar-thumb-color)
+    );
+  }
+  &::-webkit-scrollbar-button:single-button:active {
+    background: var(
+      --tw-scrollbar-arrow-active,
+      var(--tw-scrollbar-arrow-hover, var(--tw-scrollbar-thumb-color))
+    );
+  }
+  &::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M18 15l-6-6-6 6'/%3E%3C/svg%3E");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  &::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  &::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  &::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+/* Double arrows (two at each end) */
+@utility scrollbar-arrows-double {
+  &::-webkit-scrollbar-button {
+    display: block;
+    background: var(--tw-scrollbar-arrow-bg);
+    height: var(--tw-scrollbar-width);
+    width: var(--tw-scrollbar-width);
+  }
+  &::-webkit-scrollbar-button:hover {
+    background: var(
+      --tw-scrollbar-arrow-hover,
+      var(--tw-scrollbar-thumb-color)
+    );
+  }
+  &::-webkit-scrollbar-button:active {
+    background: var(
+      --tw-scrollbar-arrow-active,
+      var(--tw-scrollbar-arrow-hover, var(--tw-scrollbar-thumb-color))
+    );
+  }
+  &::-webkit-scrollbar-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M18 15l-6-6-6 6'/%3E%3C/svg%3E");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  &::-webkit-scrollbar-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  &::-webkit-scrollbar-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M15 18l-6-6 6-6'/%3E%3C/svg%3E");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  &::-webkit-scrollbar-button:horizontal:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M9 18l6-6-6-6'/%3E%3C/svg%3E");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+/* Rounded arrow buttons */
+@utility scrollbar-arrows-rounded {
+  &::-webkit-scrollbar-button {
+    border-radius: 999px;
+  }
+}
+
+/* Gutter */
+@utility scrollbar-gutter-auto {
+  scrollbar-gutter: auto;
+}
+
+@utility scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
+@utility scrollbar-gutter-both-edges {
+  scrollbar-gutter: stable both-edges;
+}

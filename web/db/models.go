@@ -19,12 +19,36 @@ type BlogCasbinRule struct {
 	V5    pgtype.Text
 }
 
+type BlogDisplayTag struct {
+	TagID        pgtype.UUID
+	BgColor      string
+	TextColor    string
+	BorderColors []string
+	Bold         bool
+	Italic       bool
+	Underline    bool
+	Font         string
+}
+
 type BlogFleeting struct {
 	ID        pgtype.UUID
-	Date      string
-	TagID     int32
-	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamptz
+	CreatedAt pgtype.Timestamptz
 	UserID    pgtype.UUID
+	TagIds    []pgtype.UUID
+	Content   string
+	DeletedAt pgtype.Timestamptz
+}
+
+type BlogNoteComponent struct {
+	ID        pgtype.UUID
+	UserID    pgtype.UUID
+	ParentID  pgtype.UUID
+	Name      string
+	Pattern   string
+	SortOrder int32
+	CreatedAt pgtype.Timestamptz
+	UpdatedAt pgtype.Timestamptz
 }
 
 type BlogSession struct {
@@ -34,8 +58,9 @@ type BlogSession struct {
 }
 
 type BlogTag struct {
-	ID   int32
-	Name string
+	Name   string
+	ID     pgtype.UUID
+	UserID pgtype.UUID
 }
 
 type BlogUser struct {
@@ -50,4 +75,9 @@ type BlogUserSession struct {
 	UserID    pgtype.UUID
 	LastToken pgtype.Text
 	UpdatedAt pgtype.Timestamptz
+}
+
+type TagIDMap struct {
+	OldID int32
+	NewID pgtype.UUID
 }

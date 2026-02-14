@@ -5,9 +5,9 @@ tasks:
     desc: "Run full development environment"
     run: once
     deps:
-      - watch:templ-local
+      # - watch:templ-local
       # - watch:templ-shared
-      - watch:tailwind
+      # - watch:tailwind
       # - run:go
       - run:air
 
@@ -28,6 +28,23 @@ tasks:
     cmds:
       - go run ./cmd/
 
+  templ:
+    desc: "Generate templ files once"
+    cmds:
+      - templ generate
+
+  tailwind:
+    desc: "Build tailwind CSS once"
+    cmds:
+      - >
+        npx tailwindcss -c ./tailwind.config.js -i ./ui/static/globals.css -o ./ui/static/css/output.css
+
+  build:
+    desc: "Run templ and tailwind once"
+    deps:
+      - templ
+      - tailwind
+
   watch:templ-local:
     sources:
       - "./**/*.templ"
@@ -39,13 +56,9 @@ tasks:
     sources:
       - "./**/*.templ"
     cmds:
-      - templ generate
+      - templ generate --watch
 
   watch:tailwind:
     cmds:
       - >
-        tailwindcss
-        -c ./tailwind.config.js
-        -i ./ui/static/globals.css
-        -o ./ui/static/css/output.css
-        --watch
+        npx tailwindcss -c ./tailwind.config.js -i ./ui/static/globals.css -o ./ui/static/css/output.css --watch

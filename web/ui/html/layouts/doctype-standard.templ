@@ -8,10 +8,23 @@ templ DoctypeStandard() {
 			<link rel="icon" href="/static/favicon.svg" type="image/svg+xml"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<script src="/static/js/htmx.min.js" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+			<script src="/static/js/time.js"></script>
+			@VimMotions()
 			<link rel="stylesheet" href="/static/css/output.css"/>
 		</head>
 		<body class="h-full flex flex-col bg-background">
 			{ children... }
 		</body>
 	</html>
+}
+
+templ VimMotions() {
+	<script src="/static/js/vim/state.js"></script>
+	<script src="/static/js/vim/keymap.js"></script>
+	<script src="/static/js/vim/dom.js"></script>
+	<script src="/static/js/vim/modes.js"></script>
+	<script src="/static/js/vim/movement.js"></script>
+	<script src="/static/js/vim/actions.js"></script>
+	<script src="/static/js/vim/keys.js"></script>
+	<script src="/static/js/vim/init.js"></script>
 }

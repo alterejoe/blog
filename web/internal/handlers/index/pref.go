@@ -1,6 +1,7 @@
 package index
 
 import (
+	"log/slog"
 	"net/http"
 	"slices"
 
@@ -16,6 +17,10 @@ type Preference struct {
 var preferences = map[string]Preference{
 	"fleeting_align": {
 		Values: []string{"Top", "Bottom"},
+		Event:  "fleeting-updated",
+	},
+	"fleeting_time": {
+		Values: []string{"Absolute", "Compact", "Verbose"},
 		Event:  "fleeting-updated",
 	},
 }
@@ -37,6 +42,7 @@ func SetPreference(tools *app.App) http.HandlerFunc {
 		}
 
 		tools.Session.SetPreference(r.Context(), key, value)
+		tools.Logger.Info("SetPreference", slog.String("key", key), slog.String("value", value))
 
 		if pref.Event != "" {
 			w.Header().Set("HX-Trigger", pref.Event)

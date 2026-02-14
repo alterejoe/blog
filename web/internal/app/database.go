@@ -16,8 +16,8 @@ func (d *App) GetDBPool() *pgxpool.Pool {
 
 func (d *App) SetRLS(r context.Context, tx pgx.Tx) error {
 	id := d.Session.Get(r, "authenticatedUserID")
-	username := d.Session.Get(r, "user_name")
-	useremail := d.Session.Get(r, "user_email")
+	// username := d.Session.Get(r, "user_name")
+	// useremail := d.Session.Get(r, "user_email")
 
 	if id == nil {
 		return fmt.Errorf("missing authenticated user id in session")
@@ -25,10 +25,8 @@ func (d *App) SetRLS(r context.Context, tx pgx.Tx) error {
 
 	if _, err := tx.Exec(r,
 		`SELECT
-        set_config('app.user_id', $1::text, true),
-        set_config('app.user_name', $2::text, true),
-        set_config('app.user_email', $3::text, true);`,
-		id, username, useremail,
+        set_config('app.current_user_id', $1::text, true);`,
+		id,
 	); err != nil {
 		return fmt.Errorf("set RLS failed: %w", err)
 	}
@@ -38,15 +36,13 @@ func (d *App) SetRLS(r context.Context, tx pgx.Tx) error {
 
 func (d *App) SetSystemRLS(r context.Context, tx pgx.Tx) error {
 	id := "00000000-0000-0000-0000-000000000000"
-	username := "SYSTEM"
-	useremail := "system@harpky.com"
+	// username := "SYSTEM"
+	// useremail := "system@harpky.com"
 
 	if _, err := tx.Exec(r,
 		`SELECT
-        set_config('app.user_id', $1::text, true),
-        set_config('app.user_name', $2::text, true),
-        set_config('app.user_email', $3::text, true);`,
-		id, username, useremail,
+        set_config('app.current_user_id', $1::text, true);`,
+		id,
 	); err != nil {
 		return fmt.Errorf("set RLS failed: %w", err)
 	}

@@ -12,33 +12,192 @@ import (
 )
 
 const createFleetingNote = `-- name: CreateFleetingNote :one
-INSERT INTO blog.fleeting (date, tag_id, user_id)
-    VALUES ($1, (
+INSERT INTO blog.fleeting (content, tag_ids, user_id)
+    VALUES ($1, ARRAY (
             SELECT
                 id
             FROM
                 blog.tags
             WHERE
-                name = $2), $3)
+                name = ANY ($2::text[])),
+            $3)
 RETURNING
-    id, date, tag_id, created_at, user_id
+    id, updated_at, created_at, user_id, tag_ids, content, deleted_at
 `
 
 type CreateFleetingNoteParams struct {
-	Date    string
-	TagName string
-	UserID  pgtype.UUID
+	Content  string
+	TagNames []string
+	UserID   pgtype.UUID
 }
 
 func (q *Queries) CreateFleetingNote(ctx context.Context, arg CreateFleetingNoteParams) (BlogFleeting, error) {
-	row := q.db.QueryRow(ctx, createFleetingNote, arg.Date, arg.TagName, arg.UserID)
+	row := q.db.QueryRow(ctx, createFleetingNote, arg.Content, arg.TagNames, arg.UserID)
 	var i BlogFleeting
 	err := row.Scan(
 		&i.ID,
-		&i.Date,
-		&i.TagID,
+		&i.UpdatedAt,
 		&i.CreatedAt,
 		&i.UserID,
+		&i.TagIds,
+		&i.Content,
+		&i.DeletedAt,
 	)
 	return i, err
+}
+
+const getFleetingNote = `-- name: GetFleetingNote :one
+SELECT
+    id, updated_at, created_at, user_id, tag_ids, content, deleted_at
+FROM
+    blog.fleeting
+WHERE
+    id = $1
+`
+
+func (q *Queries) GetFleetingNote(ctx context.Context, id pgtype.UUID) (BlogFleeting, error) {
+	row := q.db.QueryRow(ctx, getFleetingNote, id)
+	var i BlogFleeting
+	err := row.Scan(
+		&i.ID,
+		&i.UpdatedAt,
+		&i.CreatedAt,
+		&i.UserID,
+		&i.TagIds,
+		&i.Content,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const getFleetingNotesAsc = `-- name: GetFleetingNotesAsc :many
+SELECT
+    id, updated_at, created_at, user_id, tag_ids, content, deleted_at
+FROM
+    blog.fleeting AS b
+WHERE
+    user_id = $1
+ORDER BY
+    b.created_at ASC
+`
+
+func (q *Queries) GetFleetingNotesAsc(ctx context.Context, id pgtype.UUID) ([]BlogFleeting, error) {
+	rows, err := q.db.Query(ctx, getFleetingNotesAsc, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []BlogFleeting
+	for rows.Next() {
+		var i BlogFleeting
+		if err := rows.Scan(
+			&i.ID,
+			&i.UpdatedAt,
+			&i.CreatedAt,
+			&i.UserID,
+			&i.TagIds,
+			&i.Content,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getFleetingNotesDesc = `-- name: GetFleetingNotesDesc :many
+SELECT
+    id, updated_at, created_at, user_id, tag_ids, content, deleted_at
+FROM
+    blog.fleeting
+WHERE
+    user_id = $1
+    AND deleted_at IS NULL
+ORDER BY
+    created_at DESC
+`
+
+func (q *Queries) GetFleetingNotesDesc(ctx context.Context, userID pgtype.UUID) ([]BlogFleeting, error) {
+	rows, err := q.db.Query(ctx, getFleetingNotesDesc, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []BlogFleeting
+	for rows.Next() {
+		var i BlogFleeting
+		if err := rows.Scan(
+			&i.ID,
+			&i.UpdatedAt,
+			&i.CreatedAt,
+			&i.UserID,
+			&i.TagIds,
+			&i.Content,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const restoreFleetingNote = `-- name: RestoreFleetingNote :exec
+UPDATE
+    blog.fleeting
+SET
+    deleted_at = NULL,
+    updated_at = now()
+WHERE
+    id = $1
+    AND deleted_at IS NOT NULL
+`
+
+func (q *Queries) RestoreFleetingNote(ctx context.Context, id pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, restoreFleetingNote, id)
+	return err
+}
+
+const softDeleteFleetingNote = `-- name: SoftDeleteFleetingNote :exec
+UPDATE
+    blog.fleeting
+SET
+    deleted_at = now(),
+    updated_at = now()
+WHERE
+    id = $1
+    AND deleted_at IS NULL
+`
+
+func (q *Queries) SoftDeleteFleetingNote(ctx context.Context, id pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, softDeleteFleetingNote, id)
+	return err
+}
+
+const updateFleetingNoteContent = `-- name: UpdateFleetingNoteContent :exec
+UPDATE
+    blog.fleeting
+SET
+    content = $1,
+    updated_at = now()
+WHERE
+    id = $2
+    AND deleted_at IS NULL
+`
+
+type UpdateFleetingNoteContentParams struct {
+	Content string
+	ID      pgtype.UUID
+}
+
+func (q *Queries) UpdateFleetingNoteContent(ctx context.Context, arg UpdateFleetingNoteContentParams) error {
+	_, err := q.db.Exec(ctx, updateFleetingNoteContent, arg.Content, arg.ID)
+	return err
 }

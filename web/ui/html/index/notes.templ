@@ -2,6 +2,8 @@ package htmlindex
 
 import "github.com/alterejoe/shared/gencomponents/components"
 import "github.com/alterejoe/shared/structs"
+import "github.com/alterejoe/blog/db"
+import "time"
 
 type NotesProps struct {
 	FolderStructure *FolderStructureProps
@@ -14,7 +16,7 @@ templ Notes(props *NotesProps) {
 			Common: structs.Common{
 				ID:       "fleeting-container",
 				Name:     "fleeting-container",
-				Class:    "flex-1 flex flex-col",
+				Class:    "flex-1 flex flex-col font-mono",
 				Disabled: false,
 			},
 			Hx: structs.Hx{
@@ -32,6 +34,7 @@ templ Notes(props *NotesProps) {
 
 type FleetingProps struct {
 	AlignInputTop bool
+	TimeFormat    string
 }
 
 templ Fleeting(props *FleetingProps) {
@@ -53,7 +56,6 @@ templ Fleeting(props *FleetingProps) {
 				},
 				Checked: props.AlignInputTop,
 			})
-			<div class="-1"></div>
 			@components.TertiaryRadioButton(&structs.Radio{
 				Common: structs.Common{
 					ID:    "fleeting-input-bottom",
@@ -70,21 +72,123 @@ templ Fleeting(props *FleetingProps) {
 				},
 				Checked: !props.AlignInputTop,
 			})
+			<div class="flex-1"></div>
+			@components.TertiaryRadioButton(&structs.Radio{
+				Common: structs.Common{
+					ID:    "fleeting-input-absolute",
+					Name:  "fleeting-input-time",
+					Value: "Absolute",
+				},
+				Hx: structs.Hx{
+					Method:  structs.PUT,
+					Target:  "#fleeting-container",
+					Swap:    "innerHTML",
+					URL:     "/pref/fleeting_time/Absolute",
+					Trigger: "click",
+					Params:  "none",
+				},
+				Checked: props.TimeFormat == "Absolute",
+			})
+			@components.TertiaryRadioButton(&structs.Radio{
+				Common: structs.Common{
+					ID:    "fleeting-input-compact",
+					Name:  "fleeting-input-time",
+					Value: "Compact",
+				},
+				Hx: structs.Hx{
+					Method:  structs.PUT,
+					Target:  "#fleeting-container",
+					Swap:    "innerHTML",
+					URL:     "/pref/fleeting_time/Compact",
+					Trigger: "click",
+					Params:  "none",
+				},
+				Checked: props.TimeFormat == "Compact",
+			})
+			@components.TertiaryRadioButton(&structs.Radio{
+				Common: structs.Common{
+					ID:    "fleeting-input-verbose",
+					Name:  "fleeting-input-time",
+					Value: "Verbose",
+				},
+				Hx: structs.Hx{
+					Method:  structs.PUT,
+					Target:  "#fleeting-container",
+					Swap:    "innerHTML",
+					URL:     "/pref/fleeting_time/Verbose",
+					Trigger: "click",
+					Params:  "none",
+				},
+				Checked: props.TimeFormat == "Verbose",
+			})
 		</div>
 		<div class="p-1"></div>
-		<div class="flex flex-col flex-1 min-h-0 bg-secondary ">
-			if props.AlignInputTop {
-				@FleetingTop(props)
-			} else {
-				@FleetingBottom(props)
-			}
-		</div>
+		@FleetingLayout(props)
 	</div>
 }
 
-templ FleetingTop(props *FleetingProps) {
-	<div class="p-3"></div>
-	<div class="flex flex-row px-5">
+// templ FleetingTop(props *FleetingProps) {
+// 	<div class="p-3"></div>
+// 	@FleetingInput(props)
+// 	<div id="" class="flex-1"></div>
+// }
+//
+// templ FleetingBottom(props *FleetingProps) {
+// 	<div id="fleeting-notes-view" class="flex-1"></div>
+// 	@FleetingInput(props)
+// 	<div class="p-3"></div>
+// }
+templ FleetingLayout(props *FleetingProps) {
+	<div class="flex flex-col flex-1 min-h-0 bg-secondary px-5 overflow-hidden">
+		if props.AlignInputTop {
+			<div class="p-3"></div>
+			@FleetingInput(props)
+			<div class="p-1"></div>
+			@FleetingNotesLoader(true)
+		} else {
+			@FleetingNotesLoader(false)
+			<div class="p-1"></div>
+			@FleetingInput(props)
+			<div class="p-3"></div>
+		}
+	</div>
+}
+
+templ FleetingNotesLoader(alignTop bool) {
+	if alignTop {
+		<div
+			id="fleeting-notes-view"
+			name="fleeting-notes-view"
+			class="flex-1 flex flex-col min-h-0 overflow-y-auto scrollbar-styled scrollbar-arrows scrollbar-arrows-rounded scrollbar-w-lg scrollbar-thumb-primary scrollbar-thumb-hover-primary-hover scrollbar-thumb-active-primary-hover scrollbar-arrow-bg-primary scrollbar-arrow-hover-primary-hover scrollbar-arrow-active-primary-hover scrollbar-track-secondary pr-1 gap-1"
+			hx-on::after-settle="document.querySelector('#fleeting-notes-view').scrollTop = 0; document.getElementById('fleeting-post').value = '';"
+			hx-get="/notes/fleeting/view"
+			hx-target="#fleeting-notes-view"
+			hx-trigger="load"
+			hx-swap="innerHTML"
+		></div>
+	} else {
+		<div
+			id="fleeting-notes-view"
+			name="fleeting-notes-view"
+			class="flex-1 flex flex-col min-h-0 overflow-y-auto scrollbar-styled scrollbar-arrows scrollbar-arrows-rounded scrollbar-w-lg scrollbar-thumb-primary scrollbar-thumb-hover-primary-hover scrollbar-thumb-active-primary-hover scrollbar-arrow-bg-primary scrollbar-arrow-hover-primary-hover scrollbar-arrow-active-primary-hover scrollbar-track-secondary pr-1 gap-1"
+			hx-on::after-settle="document.querySelector('#fleeting-notes-view').scrollTop = document.querySelector('#fleeting-notes-view').scrollHeight; document.getElementById('fleeting-post').value = '';"
+			hx-get="/notes/fleeting/view"
+			hx-target="#fleeting-notes-view"
+			hx-trigger="load"
+			hx-swap="innerHTML"
+		></div>
+	}
+}
+
+func swapFromAlign(align bool) string {
+	if align {
+		return "afterbegin" // input top: new notes at visual top
+	}
+	return "beforeend" // input bottom + flex-col-reverse: new notes at visual bottom
+}
+
+templ FleetingInput(props *FleetingProps) {
+	<div class="flex flex-row">
 		@components.PrimaryInput(&structs.Input{
 			Common: structs.Common{
 				ID:       "fleeting-post",
@@ -92,51 +196,81 @@ templ FleetingTop(props *FleetingProps) {
 				Disabled: false,
 			},
 			Hx: structs.Hx{
-				Method:    structs.POST,
-				URL:       "/notes/fleeting/new",
-				Target:    "#fleetting-view",
-				Include:   "",
-				Trigger:   "",
-				Swap:      "",
-				Indicator: "",
-				Vals:      "",
-				Confirm:   "",
-				PushURL:   "",
-				Boost:     false,
+				Method:  structs.POST,
+				URL:     "/notes/fleeting/new",
+				Target:  "#fleeting-notes-view",
+				Trigger: "keyup[key=='Enter']",
+				Swap:    swapFromAlign(props.AlignInputTop),
+				Params:  "*",
+				Boost:   false,
 			},
 			Placeholder: "write short stream of conciousness thoughts...",
 		})
+		<div
+			id="fleeting-cursor-display"
+			class="text-md p-2 rounded w-full bg-primary border border-primary text-white whitespace-pre"
+		></div>
+		<div id="fleeting-post-errors" class="text-red-600 text-sm mt-1 hidden"></div>
 	</div>
-	<div id="fleeting-notes-view" class="flex-1"></div>
-	<div class="flex-1"></div>
 }
 
-templ FleetingBottom(props *FleetingProps) {
-	<div class="flex-1"></div>
-	<div class="flex flex-row px-5">
-		@components.PrimaryInput(&structs.Input{
-			Common: structs.Common{
-				ID:       "fleeting-post",
-				Name:     "fleeting-post",
-				Disabled: false,
-			},
-			Hx: structs.Hx{
-				Method:    structs.POST,
-				URL:       "/notes/fleeting/new",
-				Target:    "#fleetting-view",
-				Include:   "",
-				Trigger:   "",
-				Swap:      "",
-				Indicator: "",
-				Vals:      "",
-				Confirm:   "",
-				PushURL:   "",
-				Boost:     false,
-			},
-			Placeholder: "write short stream of conciousness thoughts...",
-		})
+type FleetingNotesViewProps struct {
+	Notes         []db.BlogFleeting
+	AlignInputTop bool
+}
+
+func flexColOrder(align bool) string {
+	if !align {
+		return "flex-col-reverse"
+	}
+	return "flex-col"
+}
+
+templ FleetingNotesView(props *FleetingNotesViewProps) {
+	if !props.AlignInputTop {
+		<div class="flex-1"></div>
+		for i := len(props.Notes) - 1; i >= 0; i-- {
+			@FleetingNote(&FleetingNoteProps{Note: &props.Notes[i]})
+		}
+	} else {
+		for _, note := range props.Notes {
+			@FleetingNote(&FleetingNoteProps{Note: &note})
+		}
+	}
+}
+
+type FleetingNoteProps struct {
+	Note *db.BlogFleeting
+}
+
+// Read-only note (unchanged)
+templ FleetingNote(props *FleetingNoteProps) {
+	<div
+		class="fleeting-note p-3 rounded-md bg-quaternary text-white text-sm flex flex-row border border-transparent"
+		data-note-id={ props.Note.ID.String() }
+	>
+		<p>{ props.Note.Content }</p>
+		<span class="flex-1"></span>
+		<span class="text-xs text-white/50 mt-1 block min-w-max" data-utc={ props.Note.CreatedAt.Time.Format(time.RFC3339) }></span>
 	</div>
-	<div class="p-3"></div>
+}
+
+// Edit mode — replaces the note when user presses i
+templ FleetingNoteEdit(props *FleetingNoteProps) {
+	<div
+		class="fleeting-note p-3 rounded-md bg-quaternary text-white text-sm flex flex-row border border-white "
+		data-note-id={ props.Note.ID.String() }
+	>
+		<input
+			type="text"
+			value={ props.Note.Content }
+			data-bwignore
+			autocomplete="off"
+			class="bg-transparent text-white text-sm outline-none w-full"
+		/>
+		<span class="flex-1"></span>
+		<span class="text-xs text-white/50 mt-1 block  min-w-max" data-utc={ props.Note.CreatedAt.Time.Format(time.RFC3339) }></span>
+	</div>
 }
 
 type FolderStructureProps struct{}
@@ -153,7 +287,7 @@ templ FolderStructure(props *FolderStructureProps) {
 			})
 		</div>
 		<div class="p-1"></div>
-		<div class="flex flex-col px-5 bg-quaternary flex-1">
+		<div class="flex flex-col bg-quaternary flex-1">
 			<div class="p-3"></div>
 			@components.TertiaryTextarea(&structs.Textarea{
 				Common: structs.Common{

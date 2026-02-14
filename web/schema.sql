@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict JkYRcKWKvyYMxhc4TQ0fJsNdQE6x69IMqcaP9N5dvUfETfBhrT1rSoPFpxJ2yDH
+\restrict BWSNrM3VpapytAxwaxxWpUa95VURTcerSilJanaFbcucA0IjPxnvhY5dWczGUsD
 
 -- Dumped from database version 17.6 (Debian 17.6-2.pgdg13+1)
 -- Dumped by pg_dump version 18.0
@@ -64,6 +64,20 @@ END;
 $$;
 
 
+--
+-- Name: update_updated_at(); Type: FUNCTION; Schema: blog; Owner: -
+--
+
+CREATE FUNCTION blog.update_updated_at() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$;
+
+
 SET default_table_access_method = heap;
 
 --
@@ -83,46 +97,50 @@ CREATE TABLE blog.casbin_rule (
 
 
 --
+-- Name: display_tags; Type: TABLE; Schema: blog; Owner: -
+--
+
+CREATE TABLE blog.display_tags (
+    tag_id uuid NOT NULL,
+    bg_color text DEFAULT ''::text NOT NULL,
+    text_color text DEFAULT ''::text NOT NULL,
+    border_colors text[] DEFAULT '{}'::text[] NOT NULL,
+    bold boolean DEFAULT false NOT NULL,
+    italic boolean DEFAULT false NOT NULL,
+    underline boolean DEFAULT false NOT NULL,
+    font text DEFAULT ''::text NOT NULL
+);
+
+
+--
 -- Name: fleeting; Type: TABLE; Schema: blog; Owner: -
 --
 
 CREATE TABLE blog.fleeting (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    date text NOT NULL,
-    tag_id integer NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    user_id uuid
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    user_id uuid,
+    tag_ids uuid[] DEFAULT '{}'::uuid[],
+    content text DEFAULT ''::text NOT NULL,
+    deleted_at timestamp with time zone
 );
 
 
 --
--- Name: tags; Type: TABLE; Schema: blog; Owner: -
+-- Name: note_component; Type: TABLE; Schema: blog; Owner: -
 --
 
-CREATE TABLE blog.tags (
-    id integer NOT NULL,
-    name text NOT NULL
+CREATE TABLE blog.note_component (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    user_id uuid NOT NULL,
+    parent_id uuid,
+    name text NOT NULL,
+    pattern text NOT NULL,
+    sort_order integer DEFAULT 0 NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: fleeting_note_type_id_seq; Type: SEQUENCE; Schema: blog; Owner: -
---
-
-CREATE SEQUENCE blog.fleeting_note_type_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: fleeting_note_type_id_seq; Type: SEQUENCE OWNED BY; Schema: blog; Owner: -
---
-
-ALTER SEQUENCE blog.fleeting_note_type_id_seq OWNED BY blog.tags.id;
 
 
 --
@@ -143,6 +161,17 @@ CREATE TABLE blog.sessions (
     token text NOT NULL,
     data bytea NOT NULL,
     expiry timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: tags; Type: TABLE; Schema: blog; Owner: -
+--
+
+CREATE TABLE blog.tags (
+    name text NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    user_id uuid NOT NULL
 );
 
 
@@ -171,13 +200,6 @@ CREATE TABLE blog.users (
 
 
 --
--- Name: tags id; Type: DEFAULT; Schema: blog; Owner: -
---
-
-ALTER TABLE ONLY blog.tags ALTER COLUMN id SET DEFAULT nextval('blog.fleeting_note_type_id_seq'::regclass);
-
-
---
 -- Name: casbin_rule casbin_rule_pkey; Type: CONSTRAINT; Schema: blog; Owner: -
 --
 
@@ -186,11 +208,11 @@ ALTER TABLE ONLY blog.casbin_rule
 
 
 --
--- Name: tags fleeting_note_type_pkey; Type: CONSTRAINT; Schema: blog; Owner: -
+-- Name: display_tags display_tags_pkey; Type: CONSTRAINT; Schema: blog; Owner: -
 --
 
-ALTER TABLE ONLY blog.tags
-    ADD CONSTRAINT fleeting_note_type_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY blog.display_tags
+    ADD CONSTRAINT display_tags_pkey PRIMARY KEY (tag_id);
 
 
 --
@@ -199,6 +221,30 @@ ALTER TABLE ONLY blog.tags
 
 ALTER TABLE ONLY blog.fleeting
     ADD CONSTRAINT fleeting_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: note_component note_component_pkey; Type: CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.note_component
+    ADD CONSTRAINT note_component_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: note_component note_component_user_id_parent_id_name_key; Type: CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.note_component
+    ADD CONSTRAINT note_component_user_id_parent_id_name_key UNIQUE (user_id, parent_id, name);
+
+
+--
+-- Name: note_component note_component_user_id_pattern_key; Type: CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.note_component
+    ADD CONSTRAINT note_component_user_id_pattern_key UNIQUE (user_id, pattern);
 
 
 --
@@ -215,6 +261,14 @@ ALTER TABLE ONLY blog.schema_migrations
 
 ALTER TABLE ONLY blog.sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (token);
+
+
+--
+-- Name: tags tags_pkey; Type: CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
 
 
 --
@@ -253,7 +307,28 @@ ALTER TABLE ONLY blog.users
 -- Name: idx_fleeting_date; Type: INDEX; Schema: blog; Owner: -
 --
 
-CREATE INDEX idx_fleeting_date ON blog.fleeting USING btree (date);
+CREATE INDEX idx_fleeting_date ON blog.fleeting USING btree (updated_at);
+
+
+--
+-- Name: idx_fleeting_deleted_at; Type: INDEX; Schema: blog; Owner: -
+--
+
+CREATE INDEX idx_fleeting_deleted_at ON blog.fleeting USING btree (deleted_at) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: idx_note_component_parent; Type: INDEX; Schema: blog; Owner: -
+--
+
+CREATE INDEX idx_note_component_parent ON blog.note_component USING btree (parent_id);
+
+
+--
+-- Name: idx_note_component_user; Type: INDEX; Schema: blog; Owner: -
+--
+
+CREATE INDEX idx_note_component_user ON blog.note_component USING btree (user_id);
 
 
 --
@@ -271,6 +346,20 @@ CREATE INDEX sessions_user_idx ON blog.user_sessions USING btree (user_id);
 
 
 --
+-- Name: fleeting set_updated_at; Type: TRIGGER; Schema: blog; Owner: -
+--
+
+CREATE TRIGGER set_updated_at BEFORE UPDATE ON blog.fleeting FOR EACH ROW EXECUTE FUNCTION blog.update_updated_at();
+
+
+--
+-- Name: note_component set_updated_at; Type: TRIGGER; Schema: blog; Owner: -
+--
+
+CREATE TRIGGER set_updated_at BEFORE UPDATE ON blog.note_component FOR EACH ROW EXECUTE FUNCTION blog.update_updated_at();
+
+
+--
 -- Name: user_sessions user_sessions_updated_at; Type: TRIGGER; Schema: blog; Owner: -
 --
 
@@ -285,11 +374,11 @@ CREATE TRIGGER users_updated_at BEFORE UPDATE ON blog.users FOR EACH ROW EXECUTE
 
 
 --
--- Name: fleeting fleeting_note_type_id_fkey; Type: FK CONSTRAINT; Schema: blog; Owner: -
+-- Name: display_tags display_tags_tag_id_fkey; Type: FK CONSTRAINT; Schema: blog; Owner: -
 --
 
-ALTER TABLE ONLY blog.fleeting
-    ADD CONSTRAINT fleeting_note_type_id_fkey FOREIGN KEY (tag_id) REFERENCES blog.tags(id);
+ALTER TABLE ONLY blog.display_tags
+    ADD CONSTRAINT display_tags_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES blog.tags(id) ON DELETE CASCADE;
 
 
 --
@@ -298,6 +387,22 @@ ALTER TABLE ONLY blog.fleeting
 
 ALTER TABLE ONLY blog.fleeting
     ADD CONSTRAINT fleeting_user_id_fkey FOREIGN KEY (user_id) REFERENCES blog.users(id);
+
+
+--
+-- Name: note_component note_component_parent_id_fkey; Type: FK CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.note_component
+    ADD CONSTRAINT note_component_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES blog.note_component(id) ON DELETE CASCADE;
+
+
+--
+-- Name: note_component note_component_user_id_fkey; Type: FK CONSTRAINT; Schema: blog; Owner: -
+--
+
+ALTER TABLE ONLY blog.note_component
+    ADD CONSTRAINT note_component_user_id_fkey FOREIGN KEY (user_id) REFERENCES blog.users(id) ON DELETE CASCADE;
 
 
 --
@@ -333,5 +438,5 @@ CREATE POLICY fleeting_owner ON blog.fleeting USING (blog.is_owner(user_id)) WIT
 -- PostgreSQL database dump complete
 --
 
-\unrestrict JkYRcKWKvyYMxhc4TQ0fJsNdQE6x69IMqcaP9N5dvUfETfBhrT1rSoPFpxJ2yDH
+\unrestrict BWSNrM3VpapytAxwaxxWpUa95VURTcerSilJanaFbcucA0IjPxnvhY5dWczGUsD
 

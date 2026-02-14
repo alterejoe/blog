@@ -31,7 +31,7 @@ resource "postgresql_grant" "client_full_access_tables" {
   role        = postgresql_role.client_runtime.name
   database    = var.postgres_database
   schema      = postgresql_schema.clerk_schema.name
-  objects     = ["casbin_rule", "sessions", "user_sessions"]
+  objects     = ["casbin_rule", "sessions", "user_sessions", "fleeting", "tags"]
   privileges  = ["DELETE", "INSERT", "SELECT", "UPDATE"]
   object_type = "table"
 

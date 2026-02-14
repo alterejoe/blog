@@ -2,7 +2,7 @@
 import { iconifyPlugin } from "@iconify/tailwind";
 export default {
     mode: "jit",
-    content: ["./ui/**/*.{templ,html,js}"],
+    content: ["./ui/html/**/*.{templ,html,js}"],
     theme: {
         extend: {
             colors: {
@@ -18,5 +18,8 @@ export default {
             },
         },
     },
-    plugins: [iconifyPlugin()],
+    plugins: [
+        iconifyPlugin(),
+        require("tailwind-scrollbar")({ nocompatible: true }),
+    ],
 };
